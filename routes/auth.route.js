@@ -3,13 +3,21 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const randToken = require('rand-token');
 
-const userModel = require('../models/user.model');
+const studentModel = require('../models/student.model');
 const SECRECT_KEY = require('../utils/config');
+const leturerModel = require('../models/leturer.model');
 
 const router = express.Router();
 
 router.post('/', async function(req, res) {
-    const user = await userModel.singleByEmail(req.body.email);
+    let user = null;
+    if(req.body.email){
+        user = await studentModel.singleByEmail(req.body.email);
+    }
+    else {
+        user = await leturerModel.singleByUsername(req.body.username);
+    }
+    
     if(user===null){
         return res.json({
             authenticated: false
@@ -29,8 +37,10 @@ router.post('/', async function(req, res) {
     });
 
     const refreshToken = randToken.generate(80);
-    await userModel.updateRefreshToken(user._id, refreshToken);
-
+    if(req.body.email){
+    await studentModel.updateRefreshToken(user._id, refreshToken);
+    }
+    else await leturerModel.updateRefreshToken(user._id, refreshToken);
     res.json({
         authenticated: true,
         accessToken,
@@ -40,11 +50,10 @@ router.post('/', async function(req, res) {
 
 
 
-//example of body of request 
 router.post('/refresh',async function(req, res){
-    const payload = jwt.verify(req.body.accessToken,SERECT_KEY,{ignoreExpiration: true});
+    const payload = jwt.verify(req.body.accessToken,SECRECT_KEY,{ignoreExpiration: true});
     const refreshToken = req.body.refreshToken;
-    const ret = await userModel.isRefreshTokenExisted(payload.userId, refreshToken);
+    const ret = await studentModel.isRefreshTokenExisted(payload.userId, refreshToken);
 
     if(ret === true ){
         const accessToken = jwt.sign({

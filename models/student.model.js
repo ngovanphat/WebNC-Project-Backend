@@ -27,7 +27,7 @@ module.exports = {
       return true;
     },
 
-    async add(user){
+    async addStudent(user){
         const userObj = new studentModel({
             email: user.email,
             password: user.password,

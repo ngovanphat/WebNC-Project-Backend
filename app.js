@@ -1,22 +1,34 @@
 const express = require('express');
+const morgan = require('morgan');
+const cors = require('cors');
+require('express-async-errors');
 
+const authentication = require('./middlewares/auth.mdw');
 
 const app = express();
+
+app.use(morgan('dev'));
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({
-  extended: true
-}));
 
-app.get('/',function(req,res){
-  res.json({
-      message: 'Hello World'
-  });
-})
+app.use('/api/v1/auth', require('./routes/auth.route'));
+app.use('/api/v1/users', require('./routes/user.route'));
 
 
+app.use((req, res, next) => {
+    res.status(404).send({
+        message: 'Resourse not found!'
+    });
+});
 
+app.use((err,req,res,next) => {
+    console.log(err.stack);
+    res.status(500).send({
+        message: 'Something broke!'
+    });
+});
 
-const PORT = 3001;
-app.listen(PORT, function () {
-  console.log(`API running on port ${PORT}`);
-})
+const PORT = process.env.PORT || 3001;
+app.listen(PORT,() => {
+    console.log(`Sakila actor backend is running at http://localhost:${PORT}`);
+});

@@ -14,6 +14,7 @@ app.use(express.json());
 app.use('/api/v1/auth', require('./routes/auth.route'));
 app.use('/api/v1/users', require('./routes/user.route'));
 app.use('/api/v1/courses',require('./routes/course.route'));
+app.use('/api/v1/categories',require('./routes/category.route'));
 
 
 app.use((req, res, next) => {

@@ -2,9 +2,9 @@
 const { Schema } = require('../utils/db');
 
 const courseSchema = new Schema({
-    id: Object,
+    id: Schema.Types.ObjectId,
     title: String,
-    categoryId: Number,
+    category: [{ type: Schema.Types.String, ref: 'categories' }],
     leturer: String,
     points: Number,
     numberOfFeedback: Number,

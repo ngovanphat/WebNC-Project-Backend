@@ -25,7 +25,7 @@ module.exports = {
         return list;
     },
     async getCourseListByCategory(categoryName, pageIndex, itemsPerPage) {
-        const list = await courseModel.paginate({ category: categoryName },{ offset: itemsPerPage * (pageIndex - 1), limit: itemsPerPage});
+        const list = await courseModel.paginate({ category: categoryName }, { offset: itemsPerPage * (pageIndex - 1), limit: itemsPerPage });
         return list;
     },
     async addCourse(course) {
@@ -53,5 +53,15 @@ module.exports = {
                 return courseObj._id;
             }
         });
+    },
+    async searchCourseByDescPoint(title) {
+        const list = await courseModel.find({ $text: { $search: title } })
+            .sort({ points: -1 }).exec();
+        return list;
+    },
+    async searchCourseByAscPrice(title) {
+        const list = await courseModel.find({ $text: { $search: title } })
+            .sort({ price: 1 }).exec();
+        return list;
     }
 };

@@ -48,6 +48,5 @@ module.exports = {
                 return userObj._id;
             }
         });
-        
     }
 };

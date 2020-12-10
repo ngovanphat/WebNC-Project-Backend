@@ -34,4 +34,16 @@ router.get('/get', async function (req, res) {
     res.json(list);
 })
 
+router.get('/searchDescPoint', async function (req, res) {
+    let searchText = req.body;
+    const list = await courseModel.searchCourseByDescPoint(searchText.title);
+    res.json(list);
+})
+
+router.get('/searchAscPrice', async function (req, res) {
+    let searchText = req.body;
+    const list = await courseModel.searchCourseByAscPrice(searchText.title);
+    res.json(list);
+})
+
 module.exports = router;

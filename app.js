@@ -16,10 +16,9 @@ app.use('/api/v1/users', require('./routes/user.route'));
 app.use('/api/v1/courses', require('./routes/course.route'));
 app.use('/api/v1/categories', require('./routes/category.route'));
 
-
 app.use((req, res, next) => {
     res.status(404).send({
-        message: 'Resourse not found!'
+        message: 'Resource not found!'
     });
 });
 

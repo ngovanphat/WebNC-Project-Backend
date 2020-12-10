@@ -14,7 +14,7 @@ const feedbackSchema = new Schema({
         max: 5
     },
     user: {
-        type: Schema.Types.String, ref: 'users' 
+        type: Schema.Types.String, ref: 'users'
     },
     last_updated: {
         type: Number

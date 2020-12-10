@@ -28,6 +28,7 @@ const courseSchema = new Schema({
     videos: [{type: String}]
 });
 
+courseSchema.index({title: 'text'});
 courseSchema.plugin(mongoosePaginate);
 
 module.exports = courseSchema;

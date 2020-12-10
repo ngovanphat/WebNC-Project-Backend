@@ -14,6 +14,4 @@ router.post('/store', async function (req, res) {
     res.status(201).json(user);
 })
 
-
-
 module.exports = router;

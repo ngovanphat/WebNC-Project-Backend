@@ -9,22 +9,22 @@ const leturerModel = require('../models/leturer.model');
 
 const router = express.Router();
 
-router.post('/', async function(req, res) {
+router.post('/', async function (req, res) {
     let user = null;
-    if(req.body.email){
+    if (req.body.email) {
         user = await studentModel.singleByEmail(req.body.email);
     }
     else {
         user = await leturerModel.singleByUsername(req.body.username);
     }
-    
-    if(user===null){
+
+    if (user === null) {
         return res.json({
             authenticated: false
         });
     }
 
-    if(!bcrypt.compareSync(req.body.password, user.password)){
+    if (!bcrypt.compareSync(req.body.password, user.password)) {
         return res.json({
             authenticated: false
         });
@@ -32,13 +32,13 @@ router.post('/', async function(req, res) {
 
     const accessToken = jwt.sign({
         userId: user.id
-    },SECRECT_KEY,{
-            expiresIn: 20*60
+    }, SECRECT_KEY, {
+        expiresIn: 20 * 60
     });
 
     const refreshToken = randToken.generate(80);
-    if(req.body.email){
-    await studentModel.updateRefreshToken(user._id, refreshToken);
+    if (req.body.email) {
+        await studentModel.updateRefreshToken(user._id, refreshToken);
     }
     else await leturerModel.updateRefreshToken(user._id, refreshToken);
     res.json({
@@ -48,18 +48,18 @@ router.post('/', async function(req, res) {
     });
 })
 
-router.post('/refresh',async function(req, res){
-    const payload = jwt.verify(req.body.accessToken,SECRECT_KEY,{ignoreExpiration: true});
+router.post('/refresh', async function (req, res) {
+    const payload = jwt.verify(req.body.accessToken, SECRECT_KEY, { ignoreExpiration: true });
     const refreshToken = req.body.refreshToken;
     const ret = await studentModel.isRefreshTokenExisted(payload.userId, refreshToken);
 
-    if(ret === true ){
+    if (ret === true) {
         const accessToken = jwt.sign({
             userId: payload.userId
-        },SECRECT_KEY,{
-            expiresIn: 20*60
+        }, SECRECT_KEY, {
+            expiresIn: 20 * 60
         });
-        return res.json({accessToken});
+        return res.json({ accessToken });
     }
 
     res.status(400).json({

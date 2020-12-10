@@ -6,22 +6,22 @@ const leturerModel = require('../models/leturer.model');
 
 const router = express.Router();
 
-router.post('/student', async function(req, res){
+router.post('/student', async function (req, res) {
     const user = req.body;
-    user.password = bcrypt.hashSync(user.password,10);
+    user.password = bcrypt.hashSync(user.password, 10);
 
     user.id = await userModel.addStudent(user);
     delete user.password;
     res.status(201).json(user);
 })
 
-router.post('/leturer', async function(req, res){
+router.post('/leturer', async function (req, res) {
     const user = req.body;
-    user.password = bcrypt.hashSync(user.password,10);
+    user.password = bcrypt.hashSync(user.password, 10);
 
     user.id = await leturerModel.addLeturer(user);
     delete user.password;
     res.status(201).json(user);
 })
 
-module.exports =router;
+module.exports = router;

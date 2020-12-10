@@ -7,7 +7,7 @@ const studentSchema = new Schema({
     fullname: String,
     favorite_list: Array,
     assign_list: Array,
-    rfToken: String 
-}); 
+    rfToken: String
+});
 
 module.exports = studentSchema;

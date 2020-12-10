@@ -13,8 +13,8 @@ app.use(express.json());
 
 app.use('/api/v1/auth', require('./routes/auth.route'));
 app.use('/api/v1/users', require('./routes/user.route'));
-app.use('/api/v1/courses',require('./routes/course.route'));
-app.use('/api/v1/categories',require('./routes/category.route'));
+app.use('/api/v1/courses', require('./routes/course.route'));
+app.use('/api/v1/categories', require('./routes/category.route'));
 
 
 app.use((req, res, next) => {
@@ -23,7 +23,7 @@ app.use((req, res, next) => {
     });
 });
 
-app.use((err,req,res,next) => {
+app.use((err, req, res, next) => {
     console.log(err.stack);
     res.status(500).send({
         message: 'Something broke!'
@@ -31,6 +31,6 @@ app.use((err,req,res,next) => {
 });
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT,() => {
+app.listen(PORT, () => {
     console.log(`Sakila actor backend is running at http://localhost:${PORT}`);
 });

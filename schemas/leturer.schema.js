@@ -8,7 +8,7 @@ const leturerSchema = new Schema({
     description: String,
     avatar: String,
     courses_list: Array,
-    rfToken: String 
-}); 
+    rfToken: String
+});
 
 module.exports = leturerSchema;

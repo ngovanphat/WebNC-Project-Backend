@@ -4,7 +4,7 @@ const mongoosePaginate = require("mongoose-paginate-v2");
 const courseSchema = new Schema({
     id: Schema.Types.ObjectId,
     title: String,
-    category: [{ type: Schema.Types.String, ref: 'categories' }],
+    category: { type: Schema.Types.String, ref: 'categories' },
     leturer: String,
     points: Number,
     numberOfFeedback: Number,
@@ -15,7 +15,7 @@ const courseSchema = new Schema({
     shortDecription: String,
     discription: String,
     last_updated: Number
-}); 
+});
 
 courseSchema.plugin(mongoosePaginate);
 

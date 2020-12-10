@@ -7,24 +7,29 @@ const courseModel = db.model('course', courseSchema);
 module.exports = {
     async getHotCourse() {
         const list = await courseModel.find({})
-        .sort({points: -1}).limit(5).exec();
+            .sort({ points: -1 }).limit(5).exec();
         return list;
     },
     async getTopViewCourse() {
         const list = await courseModel.find({})
-        .sort({numberOfStudent: -1}).limit(10).exec();
+            .sort({ numberOfStudent: -1 }).limit(10).exec();
         return list;
     },
     async getNewCourse() {
         const list = await courseModel.find({})
-        .sort({last_updated: -1}).limit(10).exec();
+            .sort({ last_updated: -1 }).limit(10).exec();
         return list;
     },
     async getCoursesPerPage(pageIndex, itemsPerPage) {
-        const list = await courseModel.paginate({}, {offset: itemsPerPage * (pageIndex - 1), limit: itemsPerPage});
+        const list = await courseModel.paginate({}, { offset: itemsPerPage * (pageIndex - 1), limit: itemsPerPage });
         return list;
     },
-    async addCourse(course){
+    async getCourseListByCategory(categoryName) {
+        const list = await courseModel.find({ category: categoryName })
+            .exec();
+        return list;
+    },
+    async addCourse(course) {
         const courseObj = new courseModel({
             title: course.title,
             category: course.category,
@@ -39,15 +44,15 @@ module.exports = {
             discription: course.description,
             last_updated: Date.now()
         });
-        
+
         await courseObj.save(function (err, courseObj) {
             if (err) {
-            console.log(err);
-            return null;
+                console.log(err);
+                return null;
             } else {
-            console.log('saved successfully:', courseObj);
-            return courseObj._id;
+                console.log('saved successfully:', courseObj);
+                return courseObj._id;
             }
-        });   
+        });
     }
 };

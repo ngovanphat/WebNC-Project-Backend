@@ -24,7 +24,13 @@ router.get('/new', async function (req, res) {
 })
 
 router.get('/get', async function (req, res) {
-    const list = await courseModel.getCoursesPerPage(req.query.page, req.query.size);
+    let page = req.query.page;
+    let page_count = req.query.size;
+    if(!req.query.page&&!req.query.size){
+        page = 1;
+        page_count = 10;
+    }
+    const list = await courseModel.getCoursesPerPage(page, page_count);
     res.json(list);
 })
 

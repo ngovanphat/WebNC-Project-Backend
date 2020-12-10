@@ -4,7 +4,7 @@ const { Schema } = require('../utils/db');
 const courseSchema = new Schema({
     id: Schema.Types.ObjectId,
     title: String,
-    category: [{ type: Schema.Types.String, ref: 'categories' }],
+    category: { type: Schema.Types.String, ref: 'categories' },
     leturer: String,
     points: Number,
     numberOfFeedback: Number,

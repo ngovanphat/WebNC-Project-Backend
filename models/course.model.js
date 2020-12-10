@@ -21,6 +21,12 @@ module.exports = {
         .sort({last_updated: -1}).limit(10).exec();
         return list;
     },
+    async getCourseListByCategory(categoryName){
+        const list = await courseModel.find({category: categoryName})
+        .exec();
+        return list;
+    }
+    ,
     async addCourse(course){
         const courseObj = new courseModel({
             title: course.title,

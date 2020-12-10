@@ -11,7 +11,7 @@ router.post('/', async function (req, res) {
         const user = req.body;
         //có pre save bên schema rồi
         const id = await userModel.add(user);
-        if(user.id==null){
+        if(id==null){
             return res.status(400).send({
                 error:"invalid info"
             });
@@ -19,8 +19,8 @@ router.post('/', async function (req, res) {
         delete user.password;
         res.status(201).json(user);
     } catch (error) {
-        res.status(400).send({
-            error
+        return res.status(400).send({
+            error:"invalid info"
         });
     }
 })

@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 
 const userModel = require('../models/student.model');
-const leturerModel =require('../models/leturer.model');
+const leturerModel = require('../models/leturer.model');
 
 const router = express.Router();
 
@@ -23,6 +23,5 @@ router.post('/leturer', async function(req, res){
     delete user.password;
     res.status(201).json(user);
 })
-
 
 module.exports =router;

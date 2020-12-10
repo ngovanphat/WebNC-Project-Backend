@@ -1,4 +1,3 @@
-
 const db = require('../utils/db');
 
 const courseSchema = require('../schemas/course.schema');
@@ -19,6 +18,10 @@ module.exports = {
     async getNewCourse() {
         const list = await courseModel.find({})
         .sort({last_updated: -1}).limit(10).exec();
+        return list;
+    },
+    async getCoursesPerPage(pageIndex, itemsPerPage) {
+        const list = await courseModel.paginate({}, {offset: itemsPerPage * (pageIndex - 1), limit: itemsPerPage});
         return list;
     },
     async addCourse(course){
@@ -45,8 +48,6 @@ module.exports = {
             console.log('saved successfully:', courseObj);
             return courseObj._id;
             }
-        });
-        
+        });   
     }
-
 };

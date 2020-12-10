@@ -1,4 +1,3 @@
-
 const { Schema } = require('../utils/db');
 
 const studentSchema = new Schema({

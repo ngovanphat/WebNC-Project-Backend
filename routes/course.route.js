@@ -23,9 +23,9 @@ router.get('/new', async function(req,res){
     res.json(list);
 })
 
-
-
-
-
+router.get('/get', async function(req,res){
+    const list = await courseModel.getCoursesPerPage(req.query.page, req.query.size);
+    res.json(list);
+})
 
 module.exports =router;

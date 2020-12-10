@@ -48,8 +48,6 @@ router.post('/', async function(req, res) {
     });
 })
 
-
-
 router.post('/refresh',async function(req, res){
     const payload = jwt.verify(req.body.accessToken,SECRECT_KEY,{ignoreExpiration: true});
     const refreshToken = req.body.refreshToken;

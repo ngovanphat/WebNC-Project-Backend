@@ -1,5 +1,5 @@
-
 const { Schema } = require('../utils/db');
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const courseSchema = new Schema({
     id: Schema.Types.ObjectId,
@@ -16,5 +16,7 @@ const courseSchema = new Schema({
     discription: String,
     last_updated: Number
 }); 
+
+courseSchema.plugin(mongoosePaginate);
 
 module.exports = courseSchema;

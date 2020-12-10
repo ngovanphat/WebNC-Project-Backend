@@ -3,20 +3,13 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const randToken = require('rand-token');
 
-const studentModel = require('../models/student.model');
+const userModel = require('../models/user.model');
 const SECRECT_KEY = require('../utils/config');
-const leturerModel = require('../models/leturer.model');
 
 const router = express.Router();
 
 router.post('/', async function (req, res) {
-    let user = null;
-    if (req.body.email) {
-        user = await studentModel.singleByEmail(req.body.email);
-    }
-    else {
-        user = await leturerModel.singleByUsername(req.body.username);
-    }
+    const user = await userModel.singleByEmail(req.body.email);
 
     if (user === null) {
         return res.json({
@@ -37,10 +30,8 @@ router.post('/', async function (req, res) {
     });
 
     const refreshToken = randToken.generate(80);
-    if (req.body.email) {
-        await studentModel.updateRefreshToken(user._id, refreshToken);
-    }
-    else await leturerModel.updateRefreshToken(user._id, refreshToken);
+    await userModel.updateRefreshToken(user._id, refreshToken);
+  
     res.json({
         authenticated: true,
         accessToken,

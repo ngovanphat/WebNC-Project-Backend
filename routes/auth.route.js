@@ -16,7 +16,11 @@ router.post('/', async function (req, res) {
             authenticated: false
         });
     }
-
+    if (user.banned) {
+        return res.status(400).send({
+          error: 'User with email ' + req.body.email + ' has been banned.'
+        });
+    }
     if (!bcrypt.compareSync(req.body.password, user.password)) {
         return res.json({
             authenticated: false
@@ -24,7 +28,8 @@ router.post('/', async function (req, res) {
     }
 
     const accessToken = jwt.sign({
-        userId: user.id
+        userId: user.id,
+        role:user.role
     }, SECRECT_KEY, {
         expiresIn: 20 * 60
     });

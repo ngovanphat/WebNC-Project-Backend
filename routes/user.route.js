@@ -4,14 +4,34 @@ const bcrypt = require('bcryptjs');
 const userModel = require('../models/user.model');
 
 const router = express.Router();
-
-router.post('/store', async function (req, res) {
-    const user = req.body;
-    user.password = bcrypt.hashSync(user.password, 10);
-
-    user.id = await userModel.add(user);
-    delete user.password;
-    res.status(201).json(user);
+//Add user
+//TODO correct error thrown
+router.post('/', async function (req, res) {
+    try {
+        const user = req.body;
+        //có pre save bên schema rồi
+        const id = await userModel.add(user);
+        if(user.id==null){
+            return res.status(400).send({
+                error:"invalid info"
+            });
+        }
+        delete user.password;
+        res.status(201).json(user);
+    } catch (error) {
+        res.status(400).send({
+            error
+        });
+    }
+})
+router.post('/login', async (req, res) => {
+    try {
+        const getUser = await User.findByCredentials(req.body.email, req.body.password);
+    } catch (error) {
+        res.status(400).send({
+            error
+        });
+    }
 })
 
 module.exports = router;

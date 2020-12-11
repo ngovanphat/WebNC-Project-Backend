@@ -23,7 +23,7 @@ const courseSchema = new Schema({
     price: Number,
     actualPrice: Number,
     shortDecription: String,
-    discription: String,
+    description: String,
     last_updated: Number,
     videos: [{type: String}]
 });

@@ -40,8 +40,9 @@ module.exports = {
             price: course.price,
             actualPrice: course.actualPrice,
             shortDecription: course.shortDecription,
-            discription: course.description,
-            last_updated: Date.now()
+            description: course.description,
+            last_updated: Date.now(),
+            video: []
         });
 
         await courseObj.save(function (err, courseObj) {

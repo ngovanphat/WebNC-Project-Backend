@@ -35,4 +35,38 @@ router.post('/login', async (req, res) => {
     }
 })
 
+
+router.post('/addFavoriteCourse', async (req,res) => {
+    try {
+        const user = await userModel.singleById(req.body.userId);
+        if(user.role !== "STUDENT"){
+            res.status(400).send({
+                message: "You are not Student"
+            });
+        }
+        else  return res.json(await userModel.updateFavoriteCourse(req.body.userId, req.body.courseId));
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({
+            error
+        });
+    }
+})
+
+router.post('/joinCourse', async (req,res) => {
+    try {
+        const user = await userModel.singleById(req.body.userId);
+        if(user.role !== "STUDENT"){
+            res.status(400).send({
+                message: "You are not Student"
+            });
+        }
+        else  return res.json(await userModel.updateJoinCourse(req.body.userId, req.body.courseId));
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({
+            error
+        });
+    }
+})
 module.exports = router;

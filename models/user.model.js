@@ -34,6 +34,20 @@ module.exports = {
             }
         });
     },
+    async updateFavoriteCourse(userId, courseId){
+        return await userModel.updateOne({
+            _id: userId
+        }, {
+            $push: { favorite_list: courseId} 
+        });
+    },
+    async updateJoinCourse(userId, courseId){
+        return await userModel.updateOne({
+            _id: userId
+        }, {
+            $push: { join_list: courseId} 
+        });
+    },
     async isRefreshTokenExisted(id, refreshToken) {
         const result = await userModel.findOne({
             _id: id,

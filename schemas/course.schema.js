@@ -1,4 +1,6 @@
 const { Schema } = require('../utils/db');
+const validator = require('validator');
+
 const mongoosePaginate = require("mongoose-paginate-v2");
 
 const courseSchema = new Schema({
@@ -13,18 +15,36 @@ const courseSchema = new Schema({
         required: 'leturer is required',
         ref: 'users' 
     },
-    points: Number,
-    numberOfFeedback: Number,
-    numberOfStudent: Number,
+    points: {
+        type: Number,
+        default: 5
+    },
+    numberOfFeedback:  {
+        type: Number,
+        default: 0
+    },
+    numberOfStudent:  {
+        type: Number,
+        default: 0
+    },
     thumnail: {
         type: String,
-        required: 'image is required'
+        trim: true,
+        default: "https://i.imgur.com/Xp51vdM.png",
+        validate(value) {
+            if (!validator.isURL(value)) {
+                throw new Error("Avatar URL is invalid");
+            }
+        },
     },
     price: Number,
     actualPrice: Number,
     shortDecription: String,
-    discription: String,
-    last_updated: Number,
+    description: String,
+    last_updated:  {
+        type: Number,
+        default: Date.now()
+    },
     videos: [{type: String}]
 });
 

@@ -1,8 +1,11 @@
 const db = require('../utils/db');
 
+const validator = require('validator');
 const courseSchema = require('../schemas/course.schema');
-
 const courseModel = db.model('course', courseSchema);
+
+const categorySchema = require('../schemas/category.schema');
+const categoryModel = db.model('categories', categorySchema);
 
 module.exports = {
     async getHotCourse() {
@@ -29,30 +32,29 @@ module.exports = {
         return list;
     },
     async addCourse(course) {
-        const courseObj = new courseModel({
-            title: course.title,
-            category: course.category,
-            leturer: course.leturer,
-            points: 5,
-            numberOfFeedback: 0,
-            numberOfStudent: 0,
-            thumnail: '',
-            price: course.price,
-            actualPrice: course.actualPrice,
-            shortDecription: course.shortDecription,
-            discription: course.description,
-            last_updated: Date.now()
-        });
+        try {
+            const courseObj = new courseModel({
+                title: course.title,
+                category: course.category,
+                leturer: course.leturer,
+                thumnail: course.thumnail,
+                price: course.price,
+                actualPrice: course.actualPrice,
+                shortDecription: course.shortDecription,
+                description: course.description,
+            });
+    
+            await courseObj.save();
 
-        await courseObj.save(function (err, courseObj) {
-            if (err) {
-                console.log(err);
-                return null;
-            } else {
-                console.log('saved successfully:', courseObj);
-                return courseObj._id;
-            }
-        });
+            const categoryObj = await categoryModel.update({ title: courseObj.category }, 
+                { $push: { courses_list : courseObj._id } 
+            });
+
+            return courseObj._id;
+        } catch (error) {
+           console.log(error);
+        }
+
     },
     async searchCourseByDescPoint(title) {
         const list = await courseModel.find({ $text: { $search: title } })

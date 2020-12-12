@@ -47,26 +47,23 @@ module.exports = {
     },
 
     async add(user) {
-        console.log(userModel.schema);
-        const userObj = new userModel({
-            email: user.email,
-            password: user.password,
-            fullname: user.fullname,
-            role: user.role,
-            avatar: '',
-            description: '',
-            favorite_list: [],
-            join_list: [],
-            course_list: [],
-            rfToken: ''
-        });
-        await userObj.save(function (err, userObj) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log('saved successfully:', userObj);
-                return userObj._id;
-            }
-        });
+        try {
+            //console.log(userModel.schema);
+            const userObj = new userModel({
+                email: user.email,
+                password: user.password,
+                fullname: user.fullname,
+                role: user.role,
+                rfToken: {
+                    token: ''
+                }
+            });
+            await userObj.save();
+            return userObj._id;
+        } catch (error) {
+            res.status(400).send({
+                error:"Invalid info" +error.message
+            })
+        }
     }
 };

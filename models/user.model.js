@@ -2,6 +2,7 @@ const db = require('../utils/db');
 
 const userSchema = require('../schemas/user.schema');
 const validator = require('validator');
+const { getCourseListByCategory } = require('./course.model');
 const userModel = db.model('users', userSchema);
 
 module.exports = {
@@ -47,6 +48,17 @@ module.exports = {
         }, {
             $push: { join_list: courseId} 
         });
+    },
+    async updateCourseList(userId, courseId){
+        return await userModel.updateOne({
+            _id: userId
+        }, {
+            $push: { course_list: courseId} 
+        });
+    },
+    async getCourseList(userId){
+        const list = await userModel.find({_id: userId}).populate('course_list').select('course_list').exec();
+        return list[0];
     },
     async isRefreshTokenExisted(id, refreshToken) {
         const result = await userModel.findOne({

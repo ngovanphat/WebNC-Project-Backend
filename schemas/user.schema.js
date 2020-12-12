@@ -91,7 +91,7 @@ const userSchema = new mongoose.Schema({
     },],
     course_list: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "courseSchema",
+        ref: "courses",
         validate(value) {
             if (this.role !== "STUDENT") {
                 throw new Error(`This user tyoe can't create Course`);

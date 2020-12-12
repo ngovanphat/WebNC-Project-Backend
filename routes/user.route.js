@@ -69,4 +69,26 @@ router.post('/joinCourse', async (req,res) => {
         });
     }
 })
+
+router.get('/getCourseList', async (req,res) => {
+    try {
+        const user = await userModel.singleById(req.body.userId);
+        console.log(user);
+        if(user.role !== "LECTURER"){
+            res.status(400).send({
+                message: "You are not Lecturer"
+            });
+        }
+        else  {
+            const list = await userModel.getCourseList(user._id);
+            res.json(list);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({
+            error
+        });
+    }
+})
+
 module.exports = router;

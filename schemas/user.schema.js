@@ -73,7 +73,7 @@ const userSchema = new mongoose.Schema({
     },
     favorite_list: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "courseSchema",
+        ref: "courses",
         validate(value) {
             if (this.role !== "STUDENT") {
                 throw new Error(`This user tyoe can't use Favorite`);
@@ -82,7 +82,7 @@ const userSchema = new mongoose.Schema({
     },],
     join_list: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "courseSchema",
+        ref: "courses",
         validate(value) {
             if (this.role !== "STUDENT") {
                 throw new Error(`This user tyoe can't join course`);
@@ -91,7 +91,7 @@ const userSchema = new mongoose.Schema({
     },],
     course_list: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "courseSchema",
+        ref: "courses",
         validate(value) {
             if (this.role !== "STUDENT") {
                 throw new Error(`This user tyoe can't create Course`);
@@ -194,6 +194,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
     return user;
 };
+
 
 //https://stackoverflow.com/questions/58580227/how-to-make-password-validation-in-nodejs-with-mongoose
 userSchema.pre("save", async function (next) {

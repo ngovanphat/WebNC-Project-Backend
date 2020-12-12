@@ -1,11 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const courseModel = require('../models/course.model');
-
+const userModel = require('../models/user.model');
 router.post('/add', async function (req, res) {
-    const course = req.body;
+    const userId = req.body.userId;
+    const user = await userModel.singleById(userId);
+    console.log(user);
+    if(user.role !== "LECTURER"){
+        res.status(400).send({
+            message: "You are not Lecturer"
+        });
+    }
+    else {
+    let course = req.body.course;
+    course.leturer = userId;
     course.id = await courseModel.addCourse(course);
+    await userModel.updateCourseList(req.body.userId, course.id);
     res.status(201).json(course);
+    }
 })
 
 router.get('/hot', async function (req, res) {

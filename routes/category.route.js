@@ -21,4 +21,9 @@ router.get('/byName', async function (req, res) {
     res.json(list);
 })
 
+router.get('/hot', async function (req, res) {
+    const list = await categoryModel.getHotCategoryList();
+    res.json(list);
+})
+
 module.exports = router;

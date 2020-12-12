@@ -20,8 +20,7 @@ module.exports = {
     },
     async getHotCategoryList(){
         try{
-            let listCategory = await categoryModel.find({}).sort({ count: -1 }).limit(5).exec();
-            console.log(listCategory);
+            let listCategory = await categoryModel.find({}).sort({ count: -1 }).select(['title','_id','count']).limit(5).exec();
             return listCategory;
         }catch(error) {
             console.log(error);

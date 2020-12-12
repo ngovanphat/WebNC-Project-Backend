@@ -39,7 +39,11 @@ router.get('/getCourseById', async function (req, res) {
     const course = await courseModel.getCourseDetail(id);
     res.json(course);
 })
-
+router.get('/getCourseSameCategory', async function (req, res) {
+    let category = req.body.category;
+    const course = await courseModel.getCourseSameCategory(category);
+    res.json(course);
+})
 router.get('/searchDescPoint', async function (req, res) {
     const list = await courseModel.searchCourseByDescPoint(req.body.searchText);
     res.json(list);

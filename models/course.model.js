@@ -104,5 +104,13 @@ module.exports = {
         console.log(list.length);
 
         return list;
+    }, 
+    async getCourseSameCategory(category){
+        let list = await courseModel.find({category: category})
+            .sort({numberOfStudent: -1})
+            .limit(5)
+            .exec();
+        console.log(list.length);
+        return list;
     }
 };

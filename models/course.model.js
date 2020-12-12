@@ -7,6 +7,16 @@ const courseModel = db.model('course', courseSchema);
 const categorySchema = require('../schemas/category.schema');
 const categoryModel = db.model('categories', categorySchema);
 
+function arrayUnique(array) {
+    for (var i = 0; i < array.length; ++i) {
+        for (var j = i + 1; j < array.length; ++j) {
+            if (array[i].title === array[j].title) 
+                array.splice(j--, 1);
+        }
+    }
+    return array;
+}
+
 module.exports = {
     async getHotCourse() {
         const list = await courseModel.find({})
@@ -63,14 +73,36 @@ module.exports = {
         }
 
     },
-    async searchCourseByDescPoint(title) {
-        const list = await courseModel.find({ $text: { $search: title } })
+    async searchCourseByDescPoint(searchText) {
+        console.log(searchText);
+        let list1 = await courseModel.find({ $text: { $search: searchText } })
             .sort({ points: -1 }).exec();
+        
+        console.log(list1.length);
+        let list2 = await courseModel.find({
+            category: { $regex: new RegExp(`${searchText}`, 'gi') }
+        }).sort({ points: -1 }).exec();
+        console.log(list2.length);
+
+        const list = arrayUnique(list1.concat(list2));
+        console.log(list.length);
+
         return list;
     },
     async searchCourseByAscPrice(title) {
-        const list = await courseModel.find({ $text: { $search: title } })
+        console.log(searchText);
+        let list1 = await courseModel.find({ $text: { $search: searchText } })
             .sort({ price: 1 }).exec();
+        
+        console.log(list1.length);
+        let list2 = await courseModel.find({
+            category: { $regex: new RegExp(`${searchText}`, 'gi') }
+        }).sort({ price: 1 }).exec();
+        console.log(list2.length);
+
+        const list = arrayUnique(list1.concat(list2));
+        console.log(list.length);
+
         return list;
     }
 };

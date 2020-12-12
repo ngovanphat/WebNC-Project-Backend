@@ -6,4 +6,5 @@ db.connect('mongodb+srv://admin:9AnE6wSwY8baPYU@wnc.nhw5i.mongodb.net/online-aca
 }).catch(() => {
     console.log('Failed to connect to database');
 });
+
 module.exports = db;

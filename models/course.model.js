@@ -31,6 +31,12 @@ module.exports = {
         const list = await courseModel.paginate({ category: categoryName }, { offset: itemsPerPage * (pageIndex - 1), limit: itemsPerPage });
         return list;
     },
+    async getCourseDetail(id) {
+        const course = await courseModel.findOne({
+            _id: id
+        }).exec();
+        return course;
+    },
     async addCourse(course) {
         try {
             const courseObj = new courseModel({
@@ -43,16 +49,17 @@ module.exports = {
                 shortDecription: course.shortDecription,
                 description: course.description,
             });
-    
+
             await courseObj.save();
 
-            const categoryObj = await categoryModel.update({ title: courseObj.category }, 
-                { $push: { courses_list : courseObj._id } 
-            });
+            const categoryObj = await categoryModel.update({ title: courseObj.category },
+                {
+                    $push: { courses_list: courseObj._id }
+                });
 
             return courseObj._id;
         } catch (error) {
-           console.log(error);
+            console.log(error);
         }
 
     },

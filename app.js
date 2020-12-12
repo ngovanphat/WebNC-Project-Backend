@@ -2,7 +2,6 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 
-
 require('express-async-errors');
 
 const authentication = require('./middlewares/auth.mdw');
@@ -18,12 +17,13 @@ app.use('/api/v1/users', require('./routes/user.route'));
 app.use('/api/v1/courses', require('./routes/course.route'));
 app.use('/api/v1/categories', require('./routes/category.route'));
 
-app.get('/api/v1',async(req, res)=>{
+app.get('/api/v1', async (req, res) => {
     res.send({
-        message:'API for Online Academy Project (WNC)',
-        version:'1.0'
-    }) 
+        message: 'API for Online Academy Project (WNC)',
+        version: '1.0'
+    })
 })
+
 app.use((req, res, next) => {
     res.status(404).send({
         message: 'Resource not found!'

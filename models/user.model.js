@@ -11,7 +11,6 @@ module.exports = {
         }).exec();
         return user;
     },
-
     async singleByEmail(_email) {
         if (!validator.isEmail(_email)) {
             throw new Error('Email is invalid');
@@ -25,7 +24,6 @@ module.exports = {
         //console.log(user);
         return user;
     },
-
     updateRefreshToken(id, refreshToken) {
         return userModel.updateOne({
             _id: id
@@ -36,7 +34,6 @@ module.exports = {
             }
         });
     },
-
     async isRefreshTokenExisted(id, refreshToken) {
         const result = await userModel.findOne({
             _id: id,
@@ -45,7 +42,6 @@ module.exports = {
         if (result === null) return false;
         return true;
     },
-
     async add(user) {
         try {
             //console.log(userModel.schema);
@@ -62,7 +58,7 @@ module.exports = {
             return userObj._id;
         } catch (error) {
             res.status(400).send({
-                error:"Invalid info" +error.message
+                error: "Invalid info" + error.message
             })
         }
     }

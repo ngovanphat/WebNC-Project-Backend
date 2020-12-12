@@ -18,7 +18,7 @@ router.post('/', async function (req, res) {
     }
     if (user.banned) {
         return res.status(400).send({
-          error: 'User with email ' + req.body.email + ' has been banned.'
+            error: 'User with email ' + req.body.email + ' has been banned.'
         });
     }
     if (!bcrypt.compareSync(req.body.password, user.password)) {
@@ -29,14 +29,14 @@ router.post('/', async function (req, res) {
 
     const accessToken = jwt.sign({
         userId: user.id,
-        role:user.role
+        role: user.role
     }, SECRECT_KEY, {
         expiresIn: 20 * 60
     });
 
     const refreshToken = randToken.generate(80);
     await userModel.updateRefreshToken(user._id, refreshToken);
-  
+
     res.json({
         authenticated: true,
         accessToken,

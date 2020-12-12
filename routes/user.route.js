@@ -11,19 +11,20 @@ router.post('/', async function (req, res) {
         const user = req.body;
         //có pre save bên schema rồi
         const id = await userModel.add(user);
-        if(id==null){
+        if (id == null) {
             return res.status(400).send({
-                error:"invalid info"
+                error: "invalid info"
             });
         }
         delete user.password;
         res.status(201).json(user);
     } catch (error) {
         return res.status(400).send({
-            error:"invalid info"
+            error: "invalid info"
         });
     }
 })
+
 router.post('/login', async (req, res) => {
     try {
         const getUser = await User.findByCredentials(req.body.email, req.body.password);

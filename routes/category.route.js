@@ -13,7 +13,7 @@ router.get('/byName', async function (req, res) {
     const categoryName = req.query.categoryName;
     let page = req.query.page;
     let page_count = req.query.page_count;
-    if(!req.query.page&&!req.query.page_count){
+    if (!req.query.page && !req.query.page_count) {
         page = 1;
         page_count = 10;
     }

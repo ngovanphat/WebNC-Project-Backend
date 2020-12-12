@@ -11,8 +11,6 @@ const categorySchema = new mongoose.Schema({
     courses_list: [{type: Schema.Types.ObjectId, ref: 'courses'}]
 });
 
-
-
 categorySchema.methods.toJSON = function () {
     const category = this;
     const categoryObject = category.toObject();

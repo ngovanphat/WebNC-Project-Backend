@@ -12,7 +12,7 @@ module.exports = {
             await categoryObj.save();
             return categoryObj._id;
         } catch (error) {
-           console.log(error);
+            console.log(error);
         }
-    }
+    },
 };

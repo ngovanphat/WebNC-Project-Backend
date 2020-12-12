@@ -2,6 +2,9 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 
 const userModel = require('../models/user.model');
+const {
+    authentication
+} = require('../middlewares/auth.mdw');
 
 const router = express.Router();
 //Add user
@@ -25,14 +28,110 @@ router.post('/', async function (req, res) {
     }
 })
 
-router.post('/login', async (req, res) => {
+//get own profile
+router.get('/me', authentication, async (req, res) => {
     try {
-        const getUser = await User.findByCredentials(req.body.email, req.body.password);
+        const user = await userModel.singleById({
+            _id: req.accessTokenPayload.userId
+        });
+        if (user.banned) {
+            return res.status(400).send({
+                error: "User is banned"
+            });
+        }
+        res.send({
+            user
+        });
     } catch (error) {
-        res.status(400).send({
-            error
+        res.status(500).send();
+    }
+})
+
+//get other profile
+router.get('/:id', async (req, res) => {
+    try {
+        const user = await userModel.singleById({
+            _id: req.params.id
+        });
+        if (!user) {
+            return res.status(400).send({
+                error: 'User not found'
+            });
+        }
+        if (user.banned) {
+            return res.status(400).send({
+                error: "User is banned"
+            });
+        }
+        //email = tên đăng nhập nên không trả về
+        delete user.email
+        res.send({
+            user
+        });
+    } catch (error) {
+        res.status(500).send({
+            error: error.message
         });
     }
 })
+
+//Update info
+router.patch('/me', authentication, async (req, res) => {
+    const updates = Object.keys(req.body);
+    const updatableFields = ['fullname', 'avatar', 'password', 'currentPassword'];
+    const isValid = updates.every(update => updatableFields.includes(update));
+
+    if (!isValid) {
+        return res.status(400).send({
+            error: 'Invalid updates.'
+        });
+    }
+
+    try {
+        const user = await userModel.singleById({
+            _id:req.accessTokenPayload.userId
+        });
+
+        //update basic info
+        updates.forEach(update => {
+            if (update !== 'password' && update !== 'currentPassword') {
+                //skip same info update
+                if(user[update]!== req.body[update])
+                {
+                    user[update]=req.body[update];
+                }
+            }
+        });
+        //update password
+        //TODO invoke/disable accessToken after password change
+        if (updates.includes('password')) {
+
+            if (!req.body.currentPassword) {
+                return res.status(400).send({
+                    error: 'Current password is not correct.'
+                });
+            }
+            const checkPass = await bcrypt.compare(req.body.currentPassword, user.password);
+            console.log("reached "+req.body.password);
+
+            if (!checkPass) {
+                return res.status(400).send({
+                    error: 'Current password is not correct.'
+                });
+            }
+            user.password = req.body.password;
+        }
+
+        await user.save();
+        res.send({
+            user: user
+        });
+    } catch (error) {
+        res.status(400).send({
+            error:error.message
+        });
+    }
+});
+
 
 module.exports = router;

@@ -124,7 +124,7 @@ userSchema.statics.generateResetPasswordToken = async function (email) {
         throw new Error("Email is invalid");
     }
 
-    const user = await User.findOne({
+    const user = await userSchema.findOne({
         email
     });
 
@@ -150,7 +150,7 @@ userSchema.statics.validateResetPasswordToken = async function (
     token,
     willReset = true
 ) {
-    const user = await User.findOne({
+    const user = await userSchema.findOne({
         "resetPasswordToken.token": token
     });
 
@@ -178,7 +178,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
         throw new Error("Email is invalid");
     }
 
-    const user = await User.findOne({
+    const user = await userSchema.findOne({
         email
     });
 

@@ -133,5 +133,16 @@ router.patch('/me', authentication, async (req, res) => {
     }
 });
 
+//Reset password
 
+//Get resetpasswordToken
+
+//-------ADMIN------
+//Admin update info
+
+//Admin add user(can add admin)
+
+//Admin get User list
+
+//Admin get banned user list
 module.exports = router;

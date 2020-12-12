@@ -79,7 +79,7 @@ const userSchema = new mongoose.Schema({
                 throw new Error(`This user tyoe can't use Favorite`);
             }
         },
-    }, ],
+    },],
     join_list: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "courseSchema",
@@ -88,7 +88,7 @@ const userSchema = new mongoose.Schema({
                 throw new Error(`This user tyoe can't join course`);
             }
         },
-    }, ],
+    },],
     course_list: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "courseSchema",
@@ -97,7 +97,7 @@ const userSchema = new mongoose.Schema({
                 throw new Error(`This user tyoe can't create Course`);
             }
         },
-    }, ],
+    },],
     resetPasswordToken: String,
     resetPasswordExpires: Date,
 }, {

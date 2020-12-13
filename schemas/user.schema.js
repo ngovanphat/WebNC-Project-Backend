@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 
+const mongoosePaginate = require("mongoose-paginate-v2");
+
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -98,8 +100,16 @@ const userSchema = new mongoose.Schema({
             }
         },
     },],
-    resetPasswordToken: String,
-    resetPasswordExpires: Date,
+    resetPasswordToken:{
+        token: {
+            type: String,
+        },
+        createdAt: {
+            type: Number,
+            default: Date.now() / 1000,
+            //timestamp in seconds
+        },
+    },
 }, {
     timestamps: true,
 });
@@ -111,7 +121,6 @@ userSchema.methods.toJSON = function () {
     delete userObject.password;
     delete userObject.rfToken;
     delete userObject.resetPasswordToken;
-    delete userObject.resetPasswordExpires;
     delete userObject.createdAt;
     delete userObject.updatedAt;
     delete userObject.__v;
@@ -119,81 +128,6 @@ userSchema.methods.toJSON = function () {
     return userObject;
 };
 
-userSchema.statics.generateResetPasswordToken = async function (email) {
-    if (!validator.isEmail(email)) {
-        throw new Error("Email is invalid");
-    }
-
-    const user = await userSchema.findOne({
-        email
-    });
-
-    if (!user) {
-        throw new Error("Found no user with email " + email);
-    }
-
-    if (!user.isActivated) {
-        throw new Error("This account has not been activated yet by the managers");
-    }
-
-    user.resetPasswordToken = {
-        token: mongoose.Types.ObjectId(),
-        createdAt: Date.now() / 1000,
-    };
-
-    await user.save();
-
-    return user.resetPasswordToken.token;
-};
-
-userSchema.statics.validateResetPasswordToken = async function (
-    token,
-    willReset = true
-) {
-    const user = await userSchema.findOne({
-        "resetPasswordToken.token": token
-    });
-
-    if (!user) {
-        throw new Error("Unable to find user with match token");
-    }
-
-    if (Date.now() / 1000 - user.resetPasswordToken.createdAt > 600) {
-        user.resetPasswordToken = undefined;
-        await user.save();
-
-        throw new Error("Expired reset password token");
-    }
-
-    if (willReset) {
-        user.resetPasswordToken = undefined;
-        await user.save();
-    }
-
-    return user;
-};
-
-userSchema.statics.findByCredentials = async (email, password) => {
-    if (!validator.isEmail(email)) {
-        throw new Error("Email is invalid");
-    }
-
-    const user = await userSchema.findOne({
-        email
-    });
-
-    if (!user) {
-        throw new Error("Unable to login");
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-        throw new Error("Unable to login");
-    }
-
-    return user;
-};
 
 //https://stackoverflow.com/questions/58580227/how-to-make-password-validation-in-nodejs-with-mongoose
 userSchema.pre("save", async function (next) {
@@ -206,4 +140,5 @@ userSchema.pre("save", async function (next) {
     next();
 });
 
+userSchema.plugin(mongoosePaginate);
 module.exports = userSchema;

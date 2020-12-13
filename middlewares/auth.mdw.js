@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const SECRECT_KEY = require('../utils/config');
 
 const authentication = function (req, res, next) {
     const accessToken = req.headers['x-access-token'];
@@ -11,7 +10,7 @@ const authentication = function (req, res, next) {
     }
     if (accessToken) {
         try {
-            const decoded = jwt.verify(accessToken, SECRECT_KEY);
+            const decoded = jwt.verify(accessToken, process.env.SECRET_KEY);
             req.accessTokenPayload = decoded;
         } catch (error) {
             return res.status(401).json({
@@ -36,7 +35,7 @@ const adminAuthentication = function (req, res, next) {
     }
     if (accessToken) {
         try {
-            const decoded = jwt.verify(accessToken, SECRECT_KEY);
+            const decoded = jwt.verify(accessToken, process.env.SECRET_KEY);
             if (decoded.role !== 'ADMIN') {
                 throw new Error('No permission');
             }

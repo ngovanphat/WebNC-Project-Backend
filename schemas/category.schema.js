@@ -8,7 +8,7 @@ const categorySchema = new mongoose.Schema({
     title: {
         type: Schema.Types.String,
     },
-    courses_list: [{type: Schema.Types.ObjectId, ref: 'courses'}]
+    courses_list: [{ type: Schema.Types.ObjectId, ref: 'courses' }]
 });
 
 categorySchema.methods.toJSON = function () {

@@ -35,29 +35,33 @@ module.exports = {
             }
         });
     },
-    async updateFavoriteCourse(userId, courseId){
+    async updateFavoriteCourse(userId, courseId) {
         return await userModel.updateOne({
             _id: userId
         }, {
-            $push: { favorite_list: courseId} 
+            $push: { favorite_list: courseId }
         });
     },
-    async updateJoinCourse(userId, courseId){
+    async updateJoinCourse(userId, courseId) {
         return await userModel.updateOne({
             _id: userId
         }, {
-            $push: { join_list: courseId} 
+            $push: { join_list: courseId }
         });
     },
-    async updateCourseList(userId, courseId){
+    async updateCourseList(userId, courseId) {
         return await userModel.updateOne({
             _id: userId
         }, {
-            $push: { course_list: courseId} 
+            $push: { course_list: courseId }
         });
     },
-    async getCourseList(userId){
-        const list = await userModel.find({_id: userId}).populate('course_list').select('course_list').exec();
+    async getFavoriteCourse(userId) {
+        const list = await userModel.find({ _id: userId }).populate('favorite_list').select('favorite_list').exec();
+        return list[0];
+    },
+    async getCourseList(userId) {
+        const list = await userModel.find({ _id: userId }).populate('course_list').select('course_list').exec();
         return list[0];
     },
     async isRefreshTokenExisted(id, refreshToken) {

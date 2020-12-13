@@ -25,6 +25,7 @@ const authentication = function (req, res, next) {
         });
     }
 };
+
 const adminAuthentication = function (req, res, next) {
     const accessToken = req.headers['x-access-token'];
     //console.log(accessToken);
@@ -52,6 +53,7 @@ const adminAuthentication = function (req, res, next) {
         });
     }
 };
+
 module.exports = {
     authentication,
     adminAuthentication

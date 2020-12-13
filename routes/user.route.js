@@ -89,16 +89,15 @@ router.patch('/me', authentication, async (req, res) => {
 
     try {
         const user = await userModel.singleById({
-            _id:req.accessTokenPayload.userId
+            _id: req.accessTokenPayload.userId
         });
 
         //update basic info
         updates.forEach(update => {
             if (update !== 'password' && update !== 'currentPassword') {
                 //skip same info update
-                if(user[update]!== req.body[update])
-                {
-                    user[update]=req.body[update];
+                if (user[update] !== req.body[update]) {
+                    user[update] = req.body[update];
                 }
             }
         });
@@ -112,7 +111,7 @@ router.patch('/me', authentication, async (req, res) => {
                 });
             }
             const checkPass = await bcrypt.compare(req.body.currentPassword, user.password);
-            console.log("reached "+req.body.password);
+            console.log("reached " + req.body.password);
 
             if (!checkPass) {
                 return res.status(400).send({
@@ -128,7 +127,7 @@ router.patch('/me', authentication, async (req, res) => {
         });
     } catch (error) {
         res.status(400).send({
-            error:error.message
+            error: error.message
         });
     }
 });
@@ -146,15 +145,15 @@ router.patch('/me', authentication, async (req, res) => {
 
 //Admin get banned user list
 
-router.post('/addFavoriteCourse', async (req,res) => {
+router.post('/addFavoriteCourse', async (req, res) => {
     try {
         const user = await userModel.singleById(req.body.userId);
-        if(user.role !== "STUDENT"){
+        if (user.role !== "STUDENT") {
             res.status(400).send({
                 message: "You are not Student"
             });
         }
-        else  return res.json(await userModel.updateFavoriteCourse(req.body.userId, req.body.courseId));
+        else return res.json(await userModel.updateFavoriteCourse(req.body.userId, req.body.courseId));
     } catch (error) {
         console.log(error);
         res.status(400).send({
@@ -163,15 +162,15 @@ router.post('/addFavoriteCourse', async (req,res) => {
     }
 })
 
-router.post('/joinCourse', async (req,res) => {
+router.post('/joinCourse', async (req, res) => {
     try {
         const user = await userModel.singleById(req.body.userId);
-        if(user.role !== "STUDENT"){
+        if (user.role !== "STUDENT") {
             res.status(400).send({
                 message: "You are not Student"
             });
         }
-        else  return res.json(await userModel.updateJoinCourse(req.body.userId, req.body.courseId));
+        else return res.json(await userModel.updateJoinCourse(req.body.userId, req.body.courseId));
     } catch (error) {
         console.log(error);
         res.status(400).send({
@@ -180,17 +179,17 @@ router.post('/joinCourse', async (req,res) => {
     }
 })
 
-router.get('/getCourseList', async (req,res) => {
+router.get('/getFavoriteCourse', async (req, res) => {
     try {
         const user = await userModel.singleById(req.body.userId);
         console.log(user);
-        if(user.role !== "LECTURER"){
+        if (user.role !== "STUDENT") {
             res.status(400).send({
-                message: "You are not Lecturer"
+                message: "You are not Student"
             });
         }
-        else  {
-            const list = await userModel.getCourseList(user._id);
+        else {
+            const list = await userModel.getFavoriteCourse(user._id);
             res.json(list);
         }
     } catch (error) {
@@ -201,5 +200,25 @@ router.get('/getCourseList', async (req,res) => {
     }
 })
 
+router.get('/getCourseList', async (req, res) => {
+    try {
+        const user = await userModel.singleById(req.body.userId);
+        console.log(user);
+        if (user.role !== "LECTURER") {
+            res.status(400).send({
+                message: "You are not Lecturer"
+            });
+        }
+        else {
+            const list = await userModel.getCourseList(user._id);
+            res.json(list);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({
+            error
+        });
+    }
+})
 
 module.exports = router;

@@ -13,17 +13,17 @@ const courseSchema = new Schema({
     leturer: {
         type: Schema.Types.ObjectId,
         required: 'leturer is required',
-        ref: 'users' 
+        ref: 'users'
     },
     points: {
         type: Number,
         default: 5
     },
-    numberOfFeedback:  {
+    numberOfFeedback: {
         type: Number,
         default: 0
     },
-    numberOfStudent:  {
+    numberOfStudent: {
         type: Number,
         default: 0
     },
@@ -41,14 +41,14 @@ const courseSchema = new Schema({
     actualPrice: Number,
     shortDecription: String,
     description: String,
-    last_updated:  {
+    last_updated: {
         type: Number,
         default: Date.now()
     },
-    videos: [{type: String}]
+    videos: [{ type: String }]
 });
 
-courseSchema.index({title: 'text'});
+courseSchema.index({ title: 'text' });
 courseSchema.plugin(mongoosePaginate);
 
 module.exports = courseSchema;

@@ -2,21 +2,22 @@ const express = require('express');
 const router = express.Router();
 const courseModel = require('../models/course.model');
 const userModel = require('../models/user.model');
+
 router.post('/add', async function (req, res) {
     const userId = req.body.userId;
     const user = await userModel.singleById(userId);
     console.log(user);
-    if(user.role !== "LECTURER"){
+    if (user.role !== "LECTURER") {
         res.status(400).send({
             message: "You are not Lecturer"
         });
     }
     else {
-    let course = req.body.course;
-    course.leturer = userId;
-    course.id = await courseModel.addCourse(course);
-    await userModel.updateCourseList(req.body.userId, course.id);
-    res.status(201).json(course);
+        let course = req.body.course;
+        course.leturer = userId;
+        course.id = await courseModel.addCourse(course);
+        await userModel.updateCourseList(req.body.userId, course.id);
+        res.status(201).json(course);
     }
 })
 
@@ -51,11 +52,13 @@ router.get('/getCourseById', async function (req, res) {
     const course = await courseModel.getCourseDetail(id);
     res.json(course);
 })
+
 router.get('/getCourseSameCategory', async function (req, res) {
     let category = req.body.category;
     const course = await courseModel.getCourseSameCategory(category);
     res.json(course);
 })
+
 router.get('/searchDescPoint', async function (req, res) {
     const list = await courseModel.searchCourseByDescPoint(req.body.searchText);
     res.json(list);

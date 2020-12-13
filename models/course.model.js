@@ -10,7 +10,7 @@ const categoryModel = db.model('categories', categorySchema);
 function arrayUnique(array) {
     for (var i = 0; i < array.length; ++i) {
         for (var j = i + 1; j < array.length; ++j) {
-            if (array[i].title === array[j].title) 
+            if (array[i].title === array[j].title)
                 array.splice(j--, 1);
         }
     }
@@ -77,7 +77,7 @@ module.exports = {
         console.log(searchText);
         let list1 = await courseModel.find({ $text: { $search: searchText } })
             .sort({ points: -1 }).exec();
-        
+
         console.log(list1.length);
         let list2 = await courseModel.find({
             category: { $regex: new RegExp(`${searchText}`, 'gi') }
@@ -93,7 +93,7 @@ module.exports = {
         console.log(searchText);
         let list1 = await courseModel.find({ $text: { $search: searchText } })
             .sort({ price: 1 }).exec();
-        
+
         console.log(list1.length);
         let list2 = await courseModel.find({
             category: { $regex: new RegExp(`${searchText}`, 'gi') }
@@ -104,10 +104,10 @@ module.exports = {
         console.log(list.length);
 
         return list;
-    }, 
-    async getCourseSameCategory(category){
-        let list = await courseModel.find({category: category})
-            .sort({numberOfStudent: -1})
+    },
+    async getCourseSameCategory(category) {
+        let list = await courseModel.find({ category: category })
+            .sort({ numberOfStudent: -1 })
             .limit(5)
             .exec();
         console.log(list.length);

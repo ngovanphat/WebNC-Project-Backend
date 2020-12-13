@@ -60,6 +60,10 @@ module.exports = {
         const list = await userModel.find({ _id: userId }).populate('favorite_list').select('favorite_list').exec();
         return list[0];
     },
+    async getJoinCourse(userId) {
+        const list = await userModel.find({ _id: userId }).populate('join_list').select('join_list').exec();
+        return list[0];
+    },
     async getCourseList(userId) {
         const list = await userModel.find({ _id: userId }).populate('course_list').select('course_list').exec();
         return list[0];

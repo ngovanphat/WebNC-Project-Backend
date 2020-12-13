@@ -200,6 +200,27 @@ router.get('/getFavoriteCourse', async (req, res) => {
     }
 })
 
+router.get('/getJoinCourse', async (req, res) => {
+    try {
+        const user = await userModel.singleById(req.body.userId);
+        console.log(user);
+        if (user.role !== "STUDENT") {
+            res.status(400).send({
+                message: "You are not Student"
+            });
+        }
+        else {
+            const list = await userModel.getJoinCourse(user._id);
+            res.json(list);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({
+            error
+        });
+    }
+})
+
 router.get('/getCourseList', async (req, res) => {
     try {
         const user = await userModel.singleById(req.body.userId);

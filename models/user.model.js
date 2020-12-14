@@ -41,6 +41,13 @@ module.exports = {
         }
         return list;
     },
+    async delete(id){
+        await userModel.deleteOne( { 
+            _id: id },
+            function (err) {
+                if (err) throw err;
+        });
+    },
     updateRefreshToken(id, refreshToken) {
         return userModel.updateOne(
             {

@@ -8,14 +8,17 @@ const {
 const {
     sendResetPasswordEmail,
     sendConfirmChangePasswordEmail,
-    sendConfirmAccountCreatedEmail}=require("../middlewares/email")
+    sendConfirmAccountCreatedEmail,
+} = require("../middlewares/email");
 const router = express.Router();
 //Add user
 //TODO correct error thrown
 router.post("/", async function (req, res) {
     try {
         const user = req.body;
-        delete req.body.role;
+        if (user.role === "ADMIN") {
+            throw new Error("");
+        }
         //có pre save bên schema rồi
         const id = await userModel.add(user);
         delete user.password;
@@ -248,6 +251,40 @@ router.patch("/admin-manage/:id", adminAuthentication, async (req, res) => {
     }
 });
 
+//get user info
+router.get("/admin-manage/:id", adminAuthentication, async function (req, res) {
+    try {
+        const user = await userModel.singleById({
+            _id: req.params.id,
+        });
+        if (!user) {
+            return res.status(400).send({
+                error: "User not found",
+            });
+        }
+        res.send({
+            user,
+        });
+    } catch (error) {
+        res.status(500).send({
+            error: error.message,
+        });
+    }
+});
+//delete user
+router.delete("/admin-manage/:id", adminAuthentication, async function (req, res) {
+        try {
+            await userModel.delete(req.params.id);
+            res.status(201).json({
+                message:"Delete user "+req.params.id+" successfully"
+            });
+        } catch (error) {
+            return res.status(400).send({
+                error: error.message,
+            });
+        }
+    }
+);
 //Admin add user(can add admin)
 router.post("/admin-manage", adminAuthentication, async function (req, res) {
     try {
@@ -285,7 +322,6 @@ router.get("/admin-manage/all", adminAuthentication, async function (req, res) {
         });
     }
 });
-
 
 // -------------ADMIN ---------------
 
@@ -376,8 +412,6 @@ router.post("/joinCourse", async (req, res) => {
         });
     }
 });
-
-
 
 router.get("/getJoinCourse", async (req, res) => {
     try {

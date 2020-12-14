@@ -2,11 +2,34 @@ const express = require('express');
 const router = express.Router();
 const categoryModel = require('../models/category.model');
 const courseModel = require('../models/course.model');
+const {adminAuthentication}  = require('../middlewares/auth.mdw');
 
-router.post('/add', async function (req, res) {
+router.post('/',adminAuthentication ,async function (req, res) {
     const category = req.body;
     category.id = await categoryModel.addCategory(category);
     res.status(201).json(category);
+})
+
+router.patch('/:id', async function(req, res){
+    try {
+    const result = await categoryModel.updateCategory(req.params.id,req.body);
+    res.json(result);
+    }
+    catch (error){
+        console.log(error);
+        res.status(400).json(error);
+    }
+})
+
+router.delete('/:id',adminAuthentication, async function(req, res){
+    try {
+    const result = await categoryModel.deleteCategory(req.params.id,req.body);
+    res.json(result);
+    }
+    catch (error){
+        console.log(error);
+        res.status(400).json({error});
+    }
 })
 
 router.get('/byName', async function (req, res) {

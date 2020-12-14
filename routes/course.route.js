@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const courseModel = require('../models/course.model');
 const userModel = require('../models/user.model');
-
+const {
+    adminAuthentication,
+} = require("../middlewares/auth.mdw");
 
 router.post('/add', async function (req, res) {
     const userId = req.body.userId;
@@ -34,8 +36,6 @@ router.get('/all', async function (req, res) {
 })
 
 
-
-
 //single by id
 router.get('/:id', async function (req, res) {
     let id = req.params.id;
@@ -49,6 +49,20 @@ router.patch('/:id', async function (req,res) {
     res.json(course);
 })
 
+router.delete('/:id',adminAuthentication, async function (req, res) {
+    try {
+        return res.json(
+            await courseModel.removeCourse(
+                req.params.id
+            )
+        );
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({
+            error,
+        });
+    }
+});
 
 // 5 course same category
 router.get('/byCategory/:category', async function (req, res) {

@@ -5,6 +5,7 @@ const courseSchema = require('../schemas/course.schema');
 const courseModel = db.model('course', courseSchema);
 
 const categorySchema = require('../schemas/category.schema');
+const { removeFavoriteCourse } = require('./user.model');
 const categoryModel = db.model('categories', categorySchema);
 
 function arrayUnique(array) {
@@ -89,6 +90,10 @@ module.exports = {
         } catch (error) {
             console.log(error);
         }
+    },
+    async removeCourse(courseId){
+        const result = await courseModel.findOneAndDelete({_id: courseId});
+        return result;
     },
     async searchCourseByDescPoint(searchText) {
         console.log(searchText);

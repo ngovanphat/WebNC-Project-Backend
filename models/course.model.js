@@ -83,7 +83,8 @@ module.exports = {
                 thumnail: course.thumnail || oldCourse.thumnail,
                 actualPrice: course.actualPrice || oldCourse.actualPrice,
                 description: course.description || oldCourse.description,
-                shortDecription: course.shortDecription || oldCourse.shortDecription
+                shortDecription: course.shortDecription || oldCourse.shortDecription,
+                numberOfStudent: course.numberOfStudent || oldCourse.numberOfStudent
             },{new: true});
             return courseUpdated;
             

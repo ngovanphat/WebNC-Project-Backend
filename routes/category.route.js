@@ -10,9 +10,9 @@ router.post('/',adminAuthentication ,async function (req, res) {
     res.status(201).json(category);
 })
 
-router.patch('/:id', async function(req, res){
+router.patch('/:categoryName', async function(req, res){
     try {
-    const result = await categoryModel.updateCategory(req.params.id,req.body);
+    const result = await categoryModel.updateCategoryByName(req.params.categoryName,req.body);
     res.json(result);
     }
     catch (error){

@@ -4,6 +4,8 @@ const userSchema = require("../schemas/user.schema");
 const validator = require("validator");
 const { getCourseListByCategory } = require("./course.model");
 const userModel = db.model("users", userSchema);
+const courseModel = require('./course.model');
+const categoryModel = require('./category.model');
 const crypto =require('crypto-js');
 module.exports = {
     async singleById(id) {
@@ -79,7 +81,7 @@ module.exports = {
         );
     },
     async updateJoinCourse(userId, courseId) {
-        return await userModel.updateOne(
+        const updateStatus = await userModel.updateOne(
             {
                 _id: userId,
             },
@@ -89,6 +91,12 @@ module.exports = {
                 },
             }
         );
+        if(updateStatus.n === 1 && updateStatus.ok===1){
+            const course = await courseModel.getCourseDetail(courseId);
+            await courseModel.updateCourseDetail(courseId,{numberOfStudent: course.numberOfStudent + 1});
+            await categoryModel.updateCategoryByName(course.category);
+        }
+        return updateStatus;
     },
     async updateCourseList(userId, courseId) {
         return await userModel.updateOne(

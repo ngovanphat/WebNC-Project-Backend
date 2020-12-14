@@ -18,10 +18,11 @@ module.exports = {
             console.log(error);
         }
     },
-    async updateCategory(categoryId, category){
+    async updateCategoryByName(categoryName, category){
         try {
-            const categoryUpdated = await categoryModel.findOneAndUpdate({_id: categoryId}, {
-                count: category.count
+            const oldCategory = await categoryModel.findOne({title: categoryName});
+            const categoryUpdated = await categoryModel.findOneAndUpdate({title: categoryName}, {
+                count: oldCategory.count + 1 || category.count
             },{new: true});
             return categoryUpdated;
         } catch(error){

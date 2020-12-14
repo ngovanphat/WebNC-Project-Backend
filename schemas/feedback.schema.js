@@ -14,7 +14,10 @@ const feedbackSchema = new Schema({
         max: 5
     },
     user: {
-        type: Schema.Types.String, ref: 'users'
+        type: Schema.Types.ObjectId, ref: 'users', required: true
+    },
+    course:{
+        type: Schema.Types.ObjectId, ref: 'courses', required: true
     },
     last_updated: {
         type: Number, default: Date.now()

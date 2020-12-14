@@ -73,6 +73,23 @@ module.exports = {
         }
 
     },
+    async updateCourseDetail(courseId,course){
+        try {
+            const oldCourse = await courseModel.findById(courseId);
+            const courseUpdated = await courseModel.findOneAndUpdate({_id: courseId}, {
+                title: course.title || oldCourse.title,
+                price: course.price || oldCourse.price,
+                thumnail: course.thumnail || oldCourse.thumnail,
+                actualPrice: course.actualPrice || oldCourse.actualPrice,
+                description: course.description || oldCourse.description,
+                shortDecription: course.shortDecription || oldCourse.shortDecription
+            },{new: true});
+            return courseUpdated;
+            
+        } catch (error) {
+            console.log(error);
+        }
+    },
     async searchCourseByDescPoint(searchText) {
         console.log(searchText);
         let list1 = await courseModel.find({ $text: { $search: searchText } })

@@ -66,6 +66,18 @@ module.exports = {
             }
         );
     },
+    async removeFavoriteCourse(userId, courseId){
+        return await userModel.updateOne(
+            {
+                _id: userId,
+            },
+            {
+                $pull: {
+                    favorite_list: courseId,
+                },
+            }
+        );
+    },
     async updateJoinCourse(userId, courseId) {
         return await userModel.updateOne(
             {
@@ -90,6 +102,7 @@ module.exports = {
             }
         );
     },
+
     async getFavoriteCourse(userId) {
         const list = await userModel
             .find({

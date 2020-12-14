@@ -3,6 +3,7 @@ const router = express.Router();
 const courseModel = require('../models/course.model');
 const userModel = require('../models/user.model');
 
+
 router.post('/add', async function (req, res) {
     const userId = req.body.userId;
     const user = await userModel.singleById(userId);
@@ -21,6 +22,43 @@ router.post('/add', async function (req, res) {
     }
 })
 
+router.get('/all', async function (req, res) {
+    let page = req.query.page;
+    let page_count = req.query.size;
+    if (!req.query.page && !req.query.size) {
+        page = 1;
+        page_count = 10;
+    }
+    const list = await courseModel.getCoursesPerPage(page, page_count);
+    res.json(list);
+})
+
+
+
+
+//single by id
+router.get('/:id', async function (req, res) {
+    let id = req.params.id;
+    const course = await courseModel.getCourseDetail(id);
+    res.json(course);
+})
+
+router.patch('/:id', async function (req,res) {
+    const updates = req.body;
+    const course = await courseModel.updateCourseDetail(req.params.id,updates);
+    res.json(course);
+})
+
+
+// 5 course same category
+router.get('/byCategory/:category', async function (req, res) {
+    let category = req.params.category;
+    const course = await courseModel.getCourseSameCategory(category);
+    res.json(course);
+})
+
+
+//-------------------MAIN PAGE OPERATION----------------
 router.get('/hot', async function (req, res) {
     const list = await courseModel.getHotCourse();
     res.json(list);
@@ -36,28 +74,8 @@ router.get('/new', async function (req, res) {
     res.json(list);
 })
 
-router.get('/all', async function (req, res) {
-    let page = req.query.page;
-    let page_count = req.query.size;
-    if (!req.query.page && !req.query.size) {
-        page = 1;
-        page_count = 10;
-    }
-    const list = await courseModel.getCoursesPerPage(page, page_count);
-    res.json(list);
-})
-
-router.get('/:id', async function (req, res) {
-    let id = req.params.id;
-    const course = await courseModel.getCourseDetail(id);
-    res.json(course);
-})
-
-router.get('/byCategory/:category', async function (req, res) {
-    let category = req.params.category;
-    const course = await courseModel.getCourseSameCategory(category);
-    res.json(course);
-})
+//----------------------------------------
+//------------SEARCH-----------------------
 
 router.get('/byDescPoint/:searchText', async function (req, res) {
     const list = await courseModel.searchCourseByDescPoint(req.params.searchText);
@@ -68,5 +86,5 @@ router.get('/byAscPrice/:searchText', async function (req, res) {
     const list = await courseModel.searchCourseByAscPrice(req.params.searchText);
     res.json(list);
 })
-
+//--------------------------------------
 module.exports = router;

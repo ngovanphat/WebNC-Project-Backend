@@ -286,6 +286,30 @@ router.get("/admin-manage/all", adminAuthentication, async function (req, res) {
     }
 });
 
+
+// -------------ADMIN ---------------
+
+//--------------FAVORITE COURSE----------------
+router.get("/getFavoriteCourse", async (req, res) => {
+    try {
+        const user = await userModel.singleById(req.body.userId);
+        console.log(user);
+        if (user.role !== "STUDENT") {
+            res.status(400).send({
+                message: "You are not Student",
+            });
+        } else {
+            const list = await userModel.getFavoriteCourse(user._id);
+            res.json(list);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({
+            error,
+        });
+    }
+});
+
 router.post("/addFavoriteCourse", async (req, res) => {
     try {
         const user = await userModel.singleById(req.body.userId);
@@ -307,6 +331,29 @@ router.post("/addFavoriteCourse", async (req, res) => {
         });
     }
 });
+
+router.delete("/removeFavoriteCourse", async (req, res) => {
+    try {
+        const user = await userModel.singleById(req.body.userId);
+        if (user.role !== "STUDENT") {
+            res.status(400).send({
+                message: "You are not Student",
+            });
+        } else
+            return res.json(
+                await userModel.removeFavoriteCourse(
+                    req.body.userId,
+                    req.body.courseId
+                )
+            );
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({
+            error,
+        });
+    }
+});
+//----------------------------------------------
 
 router.post("/joinCourse", async (req, res) => {
     try {
@@ -330,25 +377,7 @@ router.post("/joinCourse", async (req, res) => {
     }
 });
 
-router.get("/getFavoriteCourse", async (req, res) => {
-    try {
-        const user = await userModel.singleById(req.body.userId);
-        console.log(user);
-        if (user.role !== "STUDENT") {
-            res.status(400).send({
-                message: "You are not Student",
-            });
-        } else {
-            const list = await userModel.getFavoriteCourse(user._id);
-            res.json(list);
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(400).send({
-            error,
-        });
-    }
-});
+
 
 router.get("/getJoinCourse", async (req, res) => {
     try {

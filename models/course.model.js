@@ -89,7 +89,7 @@ module.exports = {
 
         return list;
     },
-    async searchCourseByAscPrice(title) {
+    async searchCourseByAscPrice(searchText) {
         console.log(searchText);
         let list1 = await courseModel.find({ $text: { $search: searchText } })
             .sort({ price: 1 }).exec();

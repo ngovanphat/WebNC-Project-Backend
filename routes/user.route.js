@@ -390,7 +390,7 @@ router.delete("/removeFavoriteCourse", async (req, res) => {
     }
 });
 //----------------------------------------------
-
+//----------------JOIN-------------------
 router.post("/joinCourse", async (req, res) => {
     try {
         const user = await userModel.singleById(req.body.userId);
@@ -432,7 +432,7 @@ router.get("/getJoinCourse", async (req, res) => {
         });
     }
 });
-
+//-------------------------------------------------
 router.get("/getCourseList", async (req, res) => {
     try {
         const user = await userModel.singleById(req.body.userId);

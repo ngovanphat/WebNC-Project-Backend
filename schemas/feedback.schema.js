@@ -17,7 +17,7 @@ const feedbackSchema = new Schema({
         type: Schema.Types.String, ref: 'users'
     },
     last_updated: {
-        type: Number
+        type: Number, default: Date.now()
     }
 });
 

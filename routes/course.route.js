@@ -36,7 +36,7 @@ router.get('/new', async function (req, res) {
     res.json(list);
 })
 
-router.get('/get', async function (req, res) {
+router.get('/all', async function (req, res) {
     let page = req.query.page;
     let page_count = req.query.size;
     if (!req.query.page && !req.query.size) {
@@ -47,8 +47,8 @@ router.get('/get', async function (req, res) {
     res.json(list);
 })
 
-router.get('/getCourseById', async function (req, res) {
-    let id = req.body.id;
+router.get('/:id', async function (req, res) {
+    let id = req.params.id;
     const course = await courseModel.getCourseDetail(id);
     res.json(course);
 })

@@ -45,7 +45,11 @@ const courseSchema = new Schema({
         type: Number,
         default: Date.now()
     },
-    videos: [{ type: String }]
+    videos: [{ type: String }],
+    isDone: {
+        type: Boolean,
+        default: false
+    }
 });
 
 courseSchema.index({ title: 'text' });

@@ -25,9 +25,13 @@ module.exports = {
         console.log(error);
     }
    },
-   async delete(feedbackId){
+   async delete(feedbackId, courseId){
     try {
-        const result = await feedbackModel.findByIdAndDelete(feedbackId);
+        const feedback = await feedbackModel.find({_id: feedbackId, course: courseId});
+       const result = await feedbackModel.findByIdAndDelete(feedbackId);
+       if(result){
+       courseModel.updateCourseDetail(courseId, {numberOfFeedback: feedback.length-1});
+       }
        return result;
     } catch (error) {
         console.log(error);

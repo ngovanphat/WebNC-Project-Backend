@@ -44,7 +44,7 @@ router.patch('/:id', async function(req, res){
 
 router.delete('/:id', async function(req, res){
     try{
-        const result = await feedbackModel.delete(req.params.id);
+        const result = await feedbackModel.delete(req.params.id, req.body.courseId);
         res.json(result);
     }catch (error){
         console.log(error);

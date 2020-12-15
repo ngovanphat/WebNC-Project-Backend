@@ -13,6 +13,15 @@ router.get('/all', async function(req,res){
     }
 });
 
+router.get('/:courseId', async function(req,res){
+    try {
+        const list = await feedbackModel.getByCourseID(req.params.courseId);
+        return res.json(list);
+    } catch (error){
+        res.status(400).json(error);
+    }
+});
+
 router.post('/',async function(req, res){
     try{
         const userId = req.body.user;

@@ -9,6 +9,14 @@ module.exports = {
        const list = feedbackModel.find();
        return list;
    },
+   async getByCourseID(courseId){
+       try {
+        const list = await feedbackModel.find({course: courseId});
+        return list;
+       }catch(error){
+           throw new Error(error);
+       }
+   },
    async add(feedback){
     try {
         const feedbackObj = feedbackModel({

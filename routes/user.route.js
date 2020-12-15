@@ -12,7 +12,6 @@ const {
 } = require("../middlewares/email");
 const router = express.Router();
 //Add user
-//TODO correct error thrown
 router.post("/", async function (req, res) {
     try {
         const user = req.body;
@@ -346,9 +345,9 @@ router.get("/getFavoriteCourse", async (req, res) => {
     }
 });
 
-router.post("/addFavoriteCourse", async (req, res) => {
+router.post("/addFavoriteCourse",authentication, async (req, res) => {
     try {
-        const user = await userModel.singleById(req.body.userId);
+        const user = await userModel.singleById(req.accessTokenPayload.userId);
         if (user.role !== "STUDENT") {
             res.status(400).send({
                 message: "You are not Student",
@@ -368,9 +367,9 @@ router.post("/addFavoriteCourse", async (req, res) => {
     }
 });
 
-router.delete("/removeFavoriteCourse", async (req, res) => {
+router.delete("/removeFavoriteCourse",authentication, async (req, res) => {
     try {
-        const user = await userModel.singleById(req.body.userId);
+        const user = await userModel.singleById(req.accessTokenPayload.userId);
         if (user.role !== "STUDENT") {
             res.status(400).send({
                 message: "You are not Student",
@@ -391,9 +390,9 @@ router.delete("/removeFavoriteCourse", async (req, res) => {
 });
 //----------------------------------------------
 //----------------JOIN-------------------
-router.post("/joinCourse", async (req, res) => {
+router.post("/joinCourse",authentication, async (req, res) => {
     try {
-        const user = await userModel.singleById(req.body.userId);
+        const user = await userModel.singleById(req.accessTokenPayload.userId);
         if (user.role !== "STUDENT") {
             res.status(400).send({
                 message: "You are not Student",

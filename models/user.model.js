@@ -4,9 +4,9 @@ const userSchema = require("../schemas/user.schema");
 const validator = require("validator");
 const { getCourseListByCategory } = require("./course.model");
 const userModel = db.model("users", userSchema);
-const courseModel = require('./course.model');
-const categoryModel = require('./category.model');
-const crypto =require('crypto-js');
+const courseModel = require("./course.model");
+const categoryModel = require("./category.model");
+const crypto = require("crypto-js");
 module.exports = {
     async singleById(id) {
         const user = await userModel
@@ -31,24 +31,36 @@ module.exports = {
         //console.log(user);
         return user;
     },
-    async getAll(page=1, count=10,type='all') {
+    async getAll(page = 1, count = 10, type = "all") {
         var list;
         console.log(type);
-        if(type==='all'){
-            list = await userModel.paginate({}, { offset: count * (page - 1), limit: count });
-        }else if(type==='banned'){
-            list = await userModel.paginate({banned:true}, { offset: count * (page - 1), limit: count });
-        }else if(type==='unbanned'){
-            list = await userModel.paginate({banned:false}, { offset: count * (page - 1), limit: count });
+        if (type === "all") {
+            list = await userModel.paginate(
+                {},
+                { offset: count * (page - 1), limit: count }
+            );
+        } else if (type === "banned") {
+            list = await userModel.paginate(
+                { banned: true },
+                { offset: count * (page - 1), limit: count }
+            );
+        } else if (type === "unbanned") {
+            list = await userModel.paginate(
+                { banned: false },
+                { offset: count * (page - 1), limit: count }
+            );
         }
         return list;
     },
-    async delete(id){
-        await userModel.deleteOne( { 
-            _id: id },
+    async delete(id) {
+        await userModel.deleteOne(
+            {
+                _id: id,
+            },
             function (err) {
                 if (err) throw err;
-        });
+            }
+        );
     },
     updateRefreshToken(id, refreshToken) {
         return userModel.updateOne(
@@ -75,7 +87,7 @@ module.exports = {
             }
         );
     },
-    async removeFavoriteCourse(userId, courseId){
+    async removeFavoriteCourse(userId, courseId) {
         return await userModel.updateOne(
             {
                 _id: userId,
@@ -98,9 +110,11 @@ module.exports = {
                 },
             }
         );
-        if(updateStatus.n === 1 && updateStatus.ok===1){
+        if (updateStatus.n === 1 && updateStatus.ok === 1) {
             const course = await courseModel.getCourseDetail(courseId);
-            await courseModel.updateCourseDetail(courseId,{numberOfStudent: course.numberOfStudent + 1});
+            await courseModel.updateCourseDetail(courseId, {
+                numberOfStudent: course.numberOfStudent + 1,
+            });
             await categoryModel.updateCategoryByName(course.category);
         }
         return updateStatus;
@@ -148,6 +162,24 @@ module.exports = {
             .exec();
         return list[0];
     },
+    async isJoin(userId, courseId) {
+        const user = await userModel.findOne({
+            _id: userId,
+            role:"STUDENT",
+            join_list: [courseId],
+        });
+        if (user === null) throw new Error("Invalid user.");
+        return user;
+    },
+    async isLecturerOf(userId,courseId) {
+        const user = await userModel.findOne({
+            _id: userId,
+            role:"LECTURER",    
+            "course_list._id": courseId,
+        });
+        if (user === null) throw new Error("Invalid user.");
+        return user;
+    },
     async isRefreshTokenExisted(id, refreshToken) {
         const result = await userModel.findOne({
             _id: id,
@@ -170,23 +202,25 @@ module.exports = {
         }
 
         if (user.banned) {
-            throw new Error(
-                "This account is banned"
-            );
+            throw new Error("This account is banned");
         }
-        
+
         user.resetPasswordToken = {
-            token: crypto.SHA1(process.env.RESET_PASSWORD_KEY+email),
+            token: crypto.SHA1(process.env.RESET_PASSWORD_KEY + email),
             createdAt: Date.now() / 1000,
         };
-        console.log(user.rese)
+        console.log(user.rese);
         await user.save();
 
         return user.resetPasswordToken.token;
     },
-    async validateResetPasswordToken(email,token, is_changing_password=true) {
+    async validateResetPasswordToken(
+        email,
+        token,
+        is_changing_password = true
+    ) {
         const user = await userModel.findOne({
-            email:email,
+            email: email,
             "resetPasswordToken.token": token,
         });
 
@@ -215,7 +249,7 @@ module.exports = {
                 email: user.email,
                 password: user.password,
                 fullname: user.fullname,
-                role: user.role||'STUDENT'
+                role: user.role || "STUDENT",
             });
             await userObj.save();
             return userObj._id;

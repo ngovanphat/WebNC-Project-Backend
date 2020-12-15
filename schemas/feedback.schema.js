@@ -1,4 +1,5 @@
 const { Schema } = require('../utils/db');
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const feedbackSchema = new Schema({
     id: Schema.Types.ObjectId,
@@ -19,9 +20,9 @@ const feedbackSchema = new Schema({
     course:{
         type: Schema.Types.ObjectId, ref: 'courses', required: true
     },
-    last_updated: {
-        type: Number, default: Date.now()
-    }
+}, {
+    timestamps: true
 });
 
+feedbackSchema.plugin(mongoosePaginate);
 module.exports = feedbackSchema;

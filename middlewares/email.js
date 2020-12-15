@@ -7,6 +7,7 @@ var transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASSWORD,
     },
 });
+
 const sendResetPasswordEmail = (email, code) => {
     var mailOptions = {
         from: process.env.EMAIL,
@@ -23,12 +24,13 @@ const sendResetPasswordEmail = (email, code) => {
         }
     });
 };
+
 const sendConfirmChangePasswordEmail = (email, code) => {
     var mailOptions = {
         from: process.env.EMAIL,
         to: email,
         subject: "Online Academy Password Change Notification",
-        text: "Your password on Online Academy have been changed.",
+        text: "Your password on Online Academy has been changed.",
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -39,12 +41,13 @@ const sendConfirmChangePasswordEmail = (email, code) => {
         }
     });
 };
+
 const sendConfirmAccountCreatedEmail = (email, code) => {
     var mailOptions = {
         from: process.env.EMAIL,
         to: email,
         subject: "Welcome to Online Academy",
-        text: "Your account have been created successfully.",
+        text: "Your account has been created successfully.",
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -55,4 +58,5 @@ const sendConfirmAccountCreatedEmail = (email, code) => {
         }
     });
 };
+
 module.exports = { sendResetPasswordEmail, sendConfirmChangePasswordEmail, sendConfirmAccountCreatedEmail };

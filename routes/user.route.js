@@ -11,6 +11,7 @@ const {
     sendConfirmAccountCreatedEmail,
 } = require("../middlewares/email");
 const router = express.Router();
+
 //Add user
 router.post("/", async function (req, res) {
     try {
@@ -158,6 +159,7 @@ router.post("/reset-password-token", async (req, res) => {
         });
     }
 });
+
 //verify resetpasswordToken
 router.post("/verify-reset", async (req, res) => {
     try {
@@ -175,6 +177,7 @@ router.post("/verify-reset", async (req, res) => {
         res.status(400).send({ error: error.message });
     }
 });
+
 //reset password
 router.post("/reset-password", async (req, res) => {
     try {
@@ -195,7 +198,8 @@ router.post("/reset-password", async (req, res) => {
         res.status(400).send({ error: error.message });
     }
 });
-//-------ADMIN------
+
+// -------------ADMIN ---------------
 //Admin update info
 router.patch("/admin-manage/:id", adminAuthentication, async (req, res) => {
     const updates = Object.keys(req.body);
@@ -270,20 +274,21 @@ router.get("/admin-manage/:id", adminAuthentication, async function (req, res) {
         });
     }
 });
+
 //delete user
 router.delete("/admin-manage/:id", adminAuthentication, async function (req, res) {
-        try {
-            await userModel.delete(req.params.id);
-            res.status(201).json({
-                message:"Delete user "+req.params.id+" successfully"
-            });
-        } catch (error) {
-            return res.status(400).send({
-                error: error.message,
-            });
-        }
-    }
-);
+    try {
+        await userModel.delete(req.params.id);
+        res.status(201).json({
+            message: "Delete user " + req.params.id + " successfully"
+        });
+    } catch (error) {
+        return res.status(400).send({
+            error: error.message,
+        });
+    }   
+});
+
 //Admin add user(can add admin)
 router.post("/admin-manage", adminAuthentication, async function (req, res) {
     try {
@@ -324,7 +329,7 @@ router.get("/admin-manage/all", adminAuthentication, async function (req, res) {
 
 // -------------ADMIN ---------------
 
-//--------------FAVORITE COURSE----------------
+//----------FAVORITE COURSE----------
 router.get("/getFavoriteCourse", async (req, res) => {
     try {
         const user = await userModel.singleById(req.body.userId);
@@ -345,7 +350,7 @@ router.get("/getFavoriteCourse", async (req, res) => {
     }
 });
 
-router.post("/addFavoriteCourse",authentication, async (req, res) => {
+router.post("/addFavoriteCourse", authentication, async (req, res) => {
     try {
         const user = await userModel.singleById(req.accessTokenPayload.userId);
         if (user.role !== "STUDENT") {
@@ -367,7 +372,7 @@ router.post("/addFavoriteCourse",authentication, async (req, res) => {
     }
 });
 
-router.delete("/removeFavoriteCourse",authentication, async (req, res) => {
+router.delete("/removeFavoriteCourse", authentication, async (req, res) => {
     try {
         const user = await userModel.singleById(req.accessTokenPayload.userId);
         if (user.role !== "STUDENT") {
@@ -388,9 +393,29 @@ router.delete("/removeFavoriteCourse",authentication, async (req, res) => {
         });
     }
 });
-//----------------------------------------------
+//---------------------------------------
 //----------------JOIN-------------------
-router.post("/joinCourse",authentication, async (req, res) => {
+router.get("/getJoinCourse", async (req, res) => {
+    try {
+        const user = await userModel.singleById(req.body.userId);
+        console.log(user);
+        if (user.role !== "STUDENT") {
+            res.status(400).send({
+                message: "You are not Student",
+            });
+        } else {
+            const list = await userModel.getJoinCourse(user._id);
+            res.json(list);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({
+            error,
+        });
+    }
+});
+
+router.post("/joinCourse", authentication, async (req, res) => {
     try {
         const user = await userModel.singleById(req.accessTokenPayload.userId);
         if (user.role !== "STUDENT") {
@@ -412,18 +437,20 @@ router.post("/joinCourse",authentication, async (req, res) => {
     }
 });
 
-router.get("/getJoinCourse", async (req, res) => {
+router.delete("/leaveCourse", authentication, async (req, res) => {
     try {
-        const user = await userModel.singleById(req.body.userId);
-        console.log(user);
+        const user = await userModel.singleById(req.accessTokenPayload.userId);
         if (user.role !== "STUDENT") {
             res.status(400).send({
                 message: "You are not Student",
             });
-        } else {
-            const list = await userModel.getJoinCourse(user._id);
-            res.json(list);
-        }
+        } else
+            return res.json(
+                await userModel.removeJoinCourse(
+                    req.body.userId,
+                    req.body.courseId
+                )
+            );
     } catch (error) {
         console.log(error);
         res.status(400).send({
@@ -431,7 +458,8 @@ router.get("/getJoinCourse", async (req, res) => {
         });
     }
 });
-//-------------------------------------------------
+//---------------------------------------
+//-------------COURSE LIST---------------
 router.get("/getCourseList", async (req, res) => {
     try {
         const user = await userModel.singleById(req.body.userId);

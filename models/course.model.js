@@ -72,7 +72,6 @@ module.exports = {
         } catch (error) {
             console.log(error);
         }
-
     },
     async updateCourseDetail(courseId,course){
         try {

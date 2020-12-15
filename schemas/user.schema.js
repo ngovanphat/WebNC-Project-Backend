@@ -100,7 +100,7 @@ const userSchema = new mongoose.Schema({
             }
         },
     },],
-    resetPasswordToken:{
+    resetPasswordToken: {
         token: {
             type: String,
         },
@@ -127,7 +127,6 @@ userSchema.methods.toJSON = function () {
 
     return userObject;
 };
-
 
 //https://stackoverflow.com/questions/58580227/how-to-make-password-validation-in-nodejs-with-mongoose
 userSchema.pre("save", async function (next) {

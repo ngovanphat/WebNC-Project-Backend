@@ -17,7 +17,7 @@ const feedbackSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId, ref: 'users', required: true
     },
-    course:{
+    course: {
         type: Schema.Types.ObjectId, ref: 'courses', required: true
     },
 }, {

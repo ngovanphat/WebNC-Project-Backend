@@ -78,10 +78,10 @@ module.exports = {
             console.log(error);
         }
     },
-    async isExisted(userId,courseId){
+    async isExisted(userId, courseId) {
         try {
             return feedbackModel
-            .findOne({ course: courseId,user:userId })===null?true:false; 
+                .findOne({ course: courseId, user: userId }) === null ? true : false;
         } catch (error) {
             console.log(error);
         }

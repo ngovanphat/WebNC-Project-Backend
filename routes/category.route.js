@@ -2,33 +2,33 @@ const express = require('express');
 const router = express.Router();
 const categoryModel = require('../models/category.model');
 const courseModel = require('../models/course.model');
-const {adminAuthentication}  = require('../middlewares/auth.mdw');
+const { adminAuthentication } = require('../middlewares/auth.mdw');
 
-router.post('/',adminAuthentication ,async function (req, res) {
+router.post('/', adminAuthentication, async function (req, res) {
     const category = req.body;
     category.id = await categoryModel.addCategory(category);
     res.status(201).json(category);
 })
 
-router.patch('/:categoryName', async function(req, res){
+router.patch('/:categoryName', async function (req, res) {
     try {
-    const result = await categoryModel.updateCategoryByName(req.params.categoryName,req.body);
-    res.json(result);
+        const result = await categoryModel.updateCategoryByName(req.params.categoryName, req.body);
+        res.json(result);
     }
-    catch (error){
+    catch (error) {
         console.log(error);
         res.status(400).json(error);
     }
 })
 
-router.delete('/:id',adminAuthentication, async function(req, res){
+router.delete('/:id', adminAuthentication, async function (req, res) {
     try {
-    const result = await categoryModel.deleteCategory(req.params.id,req.body);
-    res.json(result);
+        const result = await categoryModel.deleteCategory(req.params.id, req.body);
+        res.json(result);
     }
-    catch (error){
+    catch (error) {
         console.log(error);
-        res.status(400).json({error});
+        res.status(400).json({ error });
     }
 })
 

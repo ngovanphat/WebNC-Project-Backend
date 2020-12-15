@@ -18,27 +18,27 @@ module.exports = {
             console.log(error);
         }
     },
-    async updateCategoryByName(categoryName, category){
+    async updateCategoryByName(categoryName, category) {
         try {
-            const oldCategory = await categoryModel.findOne({title: categoryName});
-            const categoryUpdated = await categoryModel.findOneAndUpdate({title: categoryName}, {
+            const oldCategory = await categoryModel.findOne({ title: categoryName });
+            const categoryUpdated = await categoryModel.findOneAndUpdate({ title: categoryName }, {
                 count: oldCategory.count + 1 || category.count
-            },{new: true});
+            }, { new: true });
             return categoryUpdated;
-        } catch(error){
+        } catch (error) {
             console.log(error);
             throw new Error(error);
         }
     },
-    async deleteCategory(categoryId){
+    async deleteCategory(categoryId) {
         try {
             const category = await categoryModel.findById(categoryId);
-            if(category.courses_list.length!==0) throw new Error("Can't remove category have course");
+            if (category.courses_list.length !== 0) throw new Error("Can't remove category have course");
             else {
                 const result = await categoryModel.findByIdAndDelete(categoryId);
                 return result;
             }
-        } catch(error){
+        } catch (error) {
             console.log(error);
             throw new Error(error);
         }

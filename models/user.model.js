@@ -75,6 +75,16 @@ module.exports = {
             }
         );
     },
+    async getFavoriteCourse(userId) {
+        const list = await userModel
+            .find({
+                _id: userId,
+            })
+            .populate("favorite_list")
+            .select("favorite_list")
+            .exec();
+        return list[0];
+    },
     async updateFavoriteCourse(userId, courseId) {
         return await userModel.updateOne(
             {
@@ -99,6 +109,16 @@ module.exports = {
             }
         );
     },
+    async getJoinCourse(userId) {
+        const list = await userModel
+            .find({
+                _id: userId,
+            })
+            .populate("join_list")
+            .select("join_list")
+            .exec();
+        return list[0];
+    },
     async updateJoinCourse(userId, courseId) {
         const updateStatus = await userModel.updateOne(
             {
@@ -119,6 +139,36 @@ module.exports = {
         }
         return updateStatus;
     },
+    async removeJoinCourse(userId, courseId) {
+        const updateStatus = await userModel.updateOne(
+            {
+                _id: userId,
+            },
+            {
+                $pull: {
+                    join_list: courseId,
+                },
+            }
+        );
+        if (updateStatus.n === 1 && updateStatus.ok === 1) {
+            const course = await courseModel.getCourseDetail(courseId);
+            await courseModel.updateCourseDetail(courseId, {
+                numberOfStudent: course.numberOfStudent - 1,
+            });
+            await categoryModel.updateCategoryByName(course.category);
+        }
+        return updateStatus;
+    },
+    async getCourseList(userId) {
+        const list = await userModel
+            .find({
+                _id: userId,
+            })
+            .populate("course_list")
+            .select("course_list")
+            .exec();
+        return list[0];
+    },
     async updateCourseList(userId, courseId) {
         return await userModel.updateOne(
             {
@@ -131,50 +181,19 @@ module.exports = {
             }
         );
     },
-
-    async getFavoriteCourse(userId) {
-        const list = await userModel
-            .find({
-                _id: userId,
-            })
-            .populate("favorite_list")
-            .select("favorite_list")
-            .exec();
-        return list[0];
-    },
-    async getJoinCourse(userId) {
-        const list = await userModel
-            .find({
-                _id: userId,
-            })
-            .populate("join_list")
-            .select("join_list")
-            .exec();
-        return list[0];
-    },
-    async getCourseList(userId) {
-        const list = await userModel
-            .find({
-                _id: userId,
-            })
-            .populate("course_list")
-            .select("course_list")
-            .exec();
-        return list[0];
-    },
     async isJoin(userId, courseId) {
         const user = await userModel.findOne({
             _id: userId,
-            role:"STUDENT",
+            role: "STUDENT",
             join_list: [courseId],
         });
         if (user === null) throw new Error("Invalid user.");
         return user;
     },
-    async isLecturerOf(userId,courseId) {
+    async isLecturerOf(userId, courseId) {
         const user = await userModel.findOne({
             _id: userId,
-            role:"LECTURER",    
+            role: "LECTURER",
             "course_list._id": courseId,
         });
         if (user === null) throw new Error("Invalid user.");
@@ -209,7 +228,6 @@ module.exports = {
             token: crypto.SHA1(process.env.RESET_PASSWORD_KEY + email),
             createdAt: Date.now() / 1000,
         };
-        console.log(user.rese);
         await user.save();
 
         return user.resetPasswordToken.token;

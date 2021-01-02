@@ -44,33 +44,7 @@ router.get('/all', async function (req, res) {
     res.json(list);
 })
 
-//single by id
-router.get('/:id', async function (req, res) {
-    let id = req.params.id;
-    const course = await courseModel.getCourseDetail(id);
-    res.json(course);
-})
 
-router.patch('/:id', async function (req, res) {
-    const updates = req.body;
-    const course = await courseModel.updateCourseDetail(req.params.id, updates);
-    res.json(course);
-})
-
-router.delete('/:id', adminAuthentication, async function (req, res) {
-    try {
-        return res.json(
-            await courseModel.removeCourse(
-                req.params.id
-            )
-        );
-    } catch (error) {
-        console.log(error);
-        res.status(400).send({
-            error,
-        });
-    }
-});
 
 // 5 course same category
 router.get('/byCategory/:category', async function (req, res) {
@@ -108,4 +82,33 @@ router.get('/byAscPrice/:searchText', async function (req, res) {
     res.json(list);
 })
 //--------------------------------------
+
+
+//single by id
+router.get('/:id', async function (req, res) {
+    let id = req.params.id;
+    const course = await courseModel.getCourseDetail(id);
+    res.json(course);
+})
+
+router.patch('/:id', async function (req, res) {
+    const updates = req.body;
+    const course = await courseModel.updateCourseDetail(req.params.id, updates);
+    res.json(course);
+})
+
+router.delete('/:id', adminAuthentication, async function (req, res) {
+    try {
+        return res.json(
+            await courseModel.removeCourse(
+                req.params.id
+            )
+        );
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({
+            error,
+        });
+    }
+});
 module.exports = router;

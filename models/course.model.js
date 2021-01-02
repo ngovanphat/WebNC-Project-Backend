@@ -20,17 +20,17 @@ function arrayUnique(array) {
 
 module.exports = {
     async getHotCourse() {
-        const list = await courseModel.find({})
+        const list = await courseModel.find({}).lean().populate("leturer","fullname")
             .sort({ points: -1 }).limit(5).exec();
         return list;
     },
     async getTopViewCourse() {
-        const list = await courseModel.find({})
+        const list = await courseModel.find({}).lean().populate("leturer","fullname")
             .sort({ numberOfStudent: -1 }).limit(10).exec();
         return list;
     },
     async getNewCourse() {
-        const list = await courseModel.find({})
+        const list = await courseModel.find({}).lean().populate("leturer","fullname")
             .sort({ last_updated: -1 }).limit(10).exec();
         return list;
     },

@@ -35,7 +35,7 @@ module.exports = {
         return list;
     },
     async getCoursesPerPage(pageIndex, itemsPerPage) {
-        const list = await courseModel.paginate({}, { offset: itemsPerPage * (pageIndex - 1), limit: itemsPerPage });
+        const list = await courseModel.paginate({},{lean: true, populate: 'leturer'}, { offset: itemsPerPage * (pageIndex - 1), limit: itemsPerPage });
         return list;
     },
     async getCourseListByCategory(categoryName, pageIndex, itemsPerPage) {

@@ -10,6 +10,12 @@ router.post('/', adminAuthentication, async function (req, res) {
     res.status(201).json(category);
 })
 
+
+router.get('/', async function (req, res) {
+    const list = await categoryModel.getAllCategoryList();
+    res.json(list);
+})
+
 router.patch('/:categoryName', async function (req, res) {
     try {
         const result = await categoryModel.updateCategoryByName(req.params.categoryName, req.body);
@@ -48,5 +54,6 @@ router.get('/hot', async function (req, res) {
     const list = await categoryModel.getHotCategoryList();
     res.json(list);
 })
+
 
 module.exports = router;

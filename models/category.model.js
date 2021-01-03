@@ -50,5 +50,13 @@ module.exports = {
         } catch (error) {
             console.log(error);
         }
+    },
+    async getAllCategoryList() {
+        try {
+            let listCategory = await categoryModel.find({}).select(['title', '_id', 'count']).exec();
+            return listCategory;
+        } catch (error) {
+            console.log(error);
+        }
     }
 };

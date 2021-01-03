@@ -45,7 +45,7 @@ module.exports = {
     async getCourseDetail(id) {
         const course = await courseModel.findOne({
             _id: id
-        }).lean().populate('leturer').exec();
+        }).lean().populate('leturer','fullname course_list avatar description').exec();
         return course;
     },
     async addCourse(course) {

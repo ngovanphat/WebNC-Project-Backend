@@ -13,12 +13,13 @@ module.exports = {
         );
         return list;
     },
-    async getByCourseID(courseId) {
+    async getByCourseID(courseId, page=1, count=10) {
         try {
-            const list = await feedbackModel
-                .find({ course: courseId })
-                .lean()
-                .populate("user","fullname avatar")
+            const list = await feedbackModel.paginate(
+                {course: courseId},
+                {lean: true, populate: 'user'},
+                { offset: count * (page - 1), limit: count }
+                )
             return list;
         } catch (error) {
             throw new Error(error);

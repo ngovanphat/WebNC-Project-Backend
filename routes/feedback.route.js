@@ -31,7 +31,7 @@ router.get('/admin-manage/:courseId', adminAuthentication, async function (req, 
 //Lecturer - Get feedback by course id
 router.get('/:courseId', async function (req, res) {
     try {
-        const list = await feedbackModel.getByCourseID(req.params.courseId);
+        const list = await feedbackModel.getByCourseID(req.params.courseId,req.query.page, req.query.pageCount);
         return res.json(list);
     } catch (error) {
         res.status(400).json(error);

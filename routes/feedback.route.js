@@ -29,12 +29,8 @@ router.get('/admin-manage/:courseId', adminAuthentication, async function (req, 
 });
 
 //Lecturer - Get feedback by course id
-router.get('/:courseId', authentication, async function (req, res) {
+router.get('/:courseId', async function (req, res) {
     try {
-        const user = await userModel.isLecturerOf(req.body.user, req.body.course);
-        if (user === null) {
-            throw new Error("Invalid user to send feedback.")
-        }
         const list = await feedbackModel.getByCourseID(req.params.courseId);
         return res.json(list);
     } catch (error) {

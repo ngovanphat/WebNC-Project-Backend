@@ -17,8 +17,8 @@ module.exports = {
         try {
             const list = await feedbackModel
                 .find({ course: courseId })
-                .populate("user")
-                .populate("course");
+                .lean()
+                .populate("user","fullname avatar")
             return list;
         } catch (error) {
             throw new Error(error);

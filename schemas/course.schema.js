@@ -45,7 +45,7 @@ const courseSchema = new Schema({
         type: Number,
         default: Date.now()
     },
-    videos: [{ type: String }],
+    videos: [{ type: Schema.Types.ObjectId, ref: 'videos' }],
     isDone: {
         type: Boolean,
         default: false

@@ -45,7 +45,7 @@ module.exports = {
     async getCourseDetail(id) {
         const course = await courseModel.findOne({
             _id: id
-        }).lean().populate('leturer','fullname course_list avatar description').exec();
+        }).lean().populate('leturer','fullname course_list avatar description').populate('videos').exec();
         return course;
     },
     async addCourse(course) {
@@ -136,5 +136,23 @@ module.exports = {
             .exec();
         console.log(list.length);
         return list;
+    },
+    async addVideo(courseId,videoId) {
+        return await courseModel.update({ _id: courseId },
+            {
+                $push: { videos: videoId }
+            });
+    },
+    async removeVideo(courseId, videoId){
+        return await courseModel.updateOne(
+            {
+                _id: courseId,
+            },
+            {
+                $pull: {
+                    videos: videoId,
+                },
+            }
+        );
     }
 };

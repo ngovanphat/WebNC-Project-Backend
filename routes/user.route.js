@@ -404,7 +404,7 @@ router.get("/getJoinCourse", async (req, res) => {
                 message: "You are not Student",
             });
         } else {
-            const list = await userModel.getJoinCourse(user._id);
+            const list = await userModel.getJoinCourse(req.body.userId);
             res.json(list);
         }
     } catch (error) {

@@ -20,26 +20,26 @@ app.use('/api/v1/feedbacks', require('./routes/feedback.route'));
 app.use('/api/v1/videos', require('./routes/video.route'));
 
 app.get('/api/v1', async (req, res) => {
-    res.send({
-        message: 'API for Online Academy Project (WNC)',
-        version: '1.0'
-    })
+  res.send({
+    message: 'API for Online Academy Project (WNC)',
+    version: '1.0'
+  })
 })
 
 app.use((req, res, next) => {
-    res.status(404).send({
-        message: 'Resource not found!'
-    });
+  res.status(404).send({
+    message: 'Resource not found!'
+  });
 });
 
 app.use((err, req, res, next) => {
-    console.log(err.stack);
-    res.status(500).send({
-        message: 'Something broke!'
-    });
+  console.log(err.stack);
+  res.status(500).send({
+    message: 'Something broke!'
+  });
 });
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-    console.log(`Online Academy API is running at http://localhost:${PORT}/api/v1`);
+  console.log(`Online Academy API is running at http://localhost:${PORT}/api/v1`);
 });

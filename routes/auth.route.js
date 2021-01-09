@@ -4,6 +4,9 @@ const jwt = require('jsonwebtoken');
 const randToken = require('rand-token');
 
 const userModel = require('../models/user.model');
+const {
+  adminAuthentication,
+} = require("../middlewares/auth.mdw");
 
 const router = express.Router();
 
@@ -62,4 +65,9 @@ router.post('/refresh', async function (req, res) {
   });
 })
 
+router.get('/adminCheck',adminAuthentication, async function (req, res) {
+  res.json({
+    authenticated: true,
+  });
+})
 module.exports = router;

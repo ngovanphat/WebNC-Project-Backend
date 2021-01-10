@@ -47,8 +47,6 @@ router.delete('/:videoId', adminAuthentication, async function (req, res) {
   }
 })
 
-<<<<<<< HEAD
-=======
 router.get('/byName', async function (req, res) {
   const videoName = req.query.videoName;
   let page = req.query.page;
@@ -65,7 +63,6 @@ router.get('/hot', async function (req, res) {
   const list = await videoModel.getHotvideoList();
   res.json(list);
 })
->>>>>>> c917e3885c3543ea92f81a5f721c5b05b8c2b500
 
 
 module.exports = router;

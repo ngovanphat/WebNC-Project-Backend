@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const videoModel = require('../models/video.model');
-const courseModel = require('../models/course.model');
 const { adminAuthentication } = require('../middlewares/auth.mdw');
 
 router.post('/', async function (req, res) {
@@ -48,22 +47,6 @@ router.delete('/:videoId', adminAuthentication, async function (req, res) {
     }
 })
 
-router.get('/byName', async function (req, res) {
-    const videoName = req.query.videoName;
-    let page = req.query.page;
-    let page_count = req.query.page_count;
-    if (!req.query.page && !req.query.page_count) {
-        page = 1;
-        page_count = 10;
-    }
-    const list = await courseModel.getCourseListByvideo(videoName, page, page_count);
-    res.json(list);
-})
-
-router.get('/hot', async function (req, res) {
-    const list = await videoModel.getHotvideoList();
-    res.json(list);
-})
 
 
 module.exports = router;

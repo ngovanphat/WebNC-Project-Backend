@@ -20,7 +20,7 @@ router.post('/add', authentication, async function (req, res) {
         }
         else {
             let course = req.body.course;
-            course.leturer = userId;
+            course.leturer = req.body.userId;
             course.id = await courseModel.addCourse(course);
             await userModel.updateCourseList(req.body.userId, course.id);
             res.status(201).json(course);
@@ -40,6 +40,8 @@ router.get('/all', async function (req, res) {
         page = 1;
         page_count = 10;
     }
+    console.log(page);
+    console.log(page_count);
     const list = await courseModel.getCoursesPerPage(page, page_count);
     res.json(list);
 })

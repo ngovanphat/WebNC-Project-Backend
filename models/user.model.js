@@ -185,7 +185,7 @@ module.exports = {
     const user = await userModel.findOne({
       _id: userId,
       role: "STUDENT",
-      join_list: {$in : courseId},
+      join_list:  courseId,
     });
     if (user === null) throw new Error("Invalid user.");
     return user;

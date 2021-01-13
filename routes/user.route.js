@@ -121,6 +121,7 @@ router.patch("/me", authentication, async (req, res) => {
   const updates = Object.keys(req.body);
   const updatableFields = [
     "fullname",
+    "email",
     "avatar",
     "password",
     "currentPassword",

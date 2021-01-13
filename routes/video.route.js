@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const videoModel = require('../models/video.model');
-const courseModel = require('../models/course.model');
 const { adminAuthentication } = require('../middlewares/auth.mdw');
 
 router.post('/', async function (req, res) {

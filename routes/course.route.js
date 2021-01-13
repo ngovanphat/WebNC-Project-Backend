@@ -8,40 +8,43 @@ const {
 } = require("../middlewares/auth.mdw");
 
 router.post('/add', authentication, async function (req, res) {
-  // const userId = req.body.userId;
-  // const user = await userModel.singleById(userId);
-  // console.log(user);
-  try {
-    const user = await userModel.singleById(req.accessTokenPayload.userId);
-    if (user.role !== "LECTURER") {
-      res.status(400).send({
-        message: "You are not Lecturer"
-      });
+    // const userId = req.body.userId;
+    // const user = await userModel.singleById(userId);
+    // console.log(user);
+    try {
+        const user = await userModel.singleById(req.accessTokenPayload.userId);
+        if (user.role !== "LECTURER") {
+            res.status(400).send({
+                message: "You are not Lecturer"
+            });
+        }
+        else {
+            let course = req.body.course;
+            course.leturer = req.body.userId;
+            course.id = await courseModel.addCourse(course);
+            await userModel.updateCourseList(req.body.userId, course.id);
+            res.status(201).json(course);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({
+            error,
+        });
     }
-    else {
-      let course = req.body.course;
-      course.leturer = userId;
-      course.id = await courseModel.addCourse(course);
-      await userModel.updateCourseList(req.body.userId, course.id);
-      res.status(201).json(course);
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(400).send({
-      error,
-    });
-  }
+  
 })
 
 router.get('/all', async function (req, res) {
-  let page = req.query.page;
-  let page_count = req.query.size;
-  if (!req.query.page && !req.query.size) {
-    page = 1;
-    page_count = 10;
-  }
-  const list = await courseModel.getCoursesPerPage(page, page_count);
-  res.json(list);
+    let page = req.query.page;
+    let page_count = req.query.size;
+    if (!req.query.page && !req.query.size) {
+        page = 1;
+        page_count = 10;
+    }
+    console.log(page);
+    console.log(page_count);
+    const list = await courseModel.getCoursesPerPage(page, page_count);
+    res.json(list);
 })
 
 // 5 course same category

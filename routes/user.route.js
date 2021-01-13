@@ -239,6 +239,31 @@ router.post("/reset-password", async (req, res) => {
 });
 
 // -------------ADMIN ---------------
+//Admin get User list with banned query
+router.get("/admin-manage/all", adminAuthentication, async function (req, res) {
+  try {
+    if (req.query.type === null) {
+      const users = await userModel.getAll(
+        req.query.page,
+        req.query.pageCount
+      );
+      res.status(201).json(users);
+    } else {
+      const users = await userModel.getAll(
+        req.query.page,
+        req.query.pageCount,
+        req.query.type
+      );
+      res.status(201).json(users);
+    }
+  } catch (error) {
+    return res.status(400).send({
+      error: error.message,
+    });
+  }
+});
+
+
 //Admin update info
 router.patch("/admin-manage/:id", adminAuthentication, async (req, res) => {
   const updates = Object.keys(req.body);
@@ -342,29 +367,6 @@ router.post("/admin-manage", adminAuthentication, async function (req, res) {
   }
 });
 
-//Admin get User list with banned query
-router.get("/admin-manage/all", adminAuthentication, async function (req, res) {
-  try {
-    if (req.query.type === null) {
-      const users = await userModel.getAll(
-        req.query.page,
-        req.query.pageCount
-      );
-      res.status(201).json(users);
-    } else {
-      const users = await userModel.getAll(
-        req.query.page,
-        req.query.pageCount,
-        req.query.type
-      );
-      res.status(201).json(users);
-    }
-  } catch (error) {
-    return res.status(400).send({
-      error: error.message,
-    });
-  }
-});
 
 // -------------ADMIN ---------------
 

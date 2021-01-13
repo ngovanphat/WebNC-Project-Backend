@@ -41,14 +41,9 @@ router.get('/:courseId', async function (req, res) {
 //Create feedback
 router.post('/', authentication, async function (req, res) {
   try {
-    //check user
-    console.log(req.accessTokenPayload.userId)
-    const user = await userModel.isJoin(req.accessTokenPayload.userId, req.body.course);
-    if (user === null) {
-      throw new Error("Invalid user to send feedback.")
-    }
+    
     //check feedback already
-    if (feedbackModel.isExisted(req.accessTokenPayload.userId, req.body.course)) {
+    if (!feedbackModel.isExisted(req.accessTokenPayload.userId, req.body.course)) {
       throw new Error("Already send feedback on this course");
     }
     //create feedback & update course rating

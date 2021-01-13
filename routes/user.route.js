@@ -278,7 +278,7 @@ router.patch("/admin-manage/:id", adminAuthentication, async (req, res) => {
 
   try {
     const user = await userModel.singleById({
-      _id: req.body.userId,
+      _id: req.params.id,
     });
 
     updates.forEach((update) => {

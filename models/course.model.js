@@ -80,6 +80,7 @@ module.exports = {
         title: course.title || oldCourse.title,
         price: course.price || oldCourse.price,
         thumnail: course.thumnail || oldCourse.thumnail,
+        points: course.points || oldCourse.points,
         actualPrice: course.actualPrice || oldCourse.actualPrice,
         description: course.description || oldCourse.description,
         shortDecription: course.shortDecription || oldCourse.shortDecription,

@@ -34,9 +34,15 @@ module.exports = {
         course: feedback.course,
       });
       await feedbackObj.save();
+      const list  = await feedbackModel.find({course: feedback.course});
+      let sum =0;
+      list.forEach(comment => {
+        sum= sum + comment.rating
+      });
       const course = await courseModel.getCourseDetail(feedback.course);
       courseModel.updateCourseDetail(course._id, {
         numberOfFeedback: course.numberOfFeedback + 1,
+        points: Math.ceil(sum/list.length)
       });
       delete feedback.__v;
       delete feedback.updatedAt;

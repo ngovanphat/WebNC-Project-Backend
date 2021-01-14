@@ -42,7 +42,7 @@ module.exports = {
         { offset: count * (page - 1), limit: count }
       );
     }else{
-      list = await courseModel.find({});
+      list = await courseModel.find({}).populate('leturer');
     }
     return list;
   },

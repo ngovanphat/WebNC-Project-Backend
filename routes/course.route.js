@@ -47,6 +47,17 @@ router.get('/all', async function (req, res) {
     res.json(list);
 })
 
+router.get('/admin-manage/all',adminAuthentication, async function (req, res) {
+  let page = req.query.page;
+  let page_count = req.query.size;
+  if (req.query.page===undefined && req.query.size===undefined) {
+    const list = await courseModel.getAll();
+    return res.json(list);
+  }
+  const list = await courseModel.getCoursesPerPage(page, page_count);
+  res.json(list);
+})
+
 // 5 course same category
 router.get('/byCategory/:category', async function (req, res) {
   let category = req.params.category;

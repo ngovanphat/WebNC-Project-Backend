@@ -31,25 +31,43 @@ module.exports = {
     //console.log(user);
     return user;
   },
-  async getAll(page = 1, count = 10, type = "all") {
+  async getByPage(page=1, count=5, type = "all") {
     var list;
-    console.log(type);
+    //console.log(type);
     if (type === "all") {
-      list = await userModel.paginate(
-        {},
-        { offset: count * (page - 1), limit: count }
-      );
-    } else if (type === "banned") {
-      list = await userModel.paginate(
+        list = await userModel.paginate(
+          {},
+          { offset: count * (page - 1), limit: count }
+        );
+    } else if (type === "student") {
+      /* list = await userModel.paginate(
         { banned: true },
         { offset: count * (page - 1), limit: count }
-      );
-    } else if (type === "unbanned") {
-      list = await userModel.paginate(
-        { banned: false },
+      ); */
+      list= await userModel.paginate(
+        { role:"STUDENT"},
         { offset: count * (page - 1), limit: count }
       );
-    }
+    } else if (type === "lecturer") {
+      list= await userModel.paginate(
+        { role:"LECTURER"},
+        { offset: count * (page - 1), limit: count }
+      );
+    } 
+    return list;
+  },
+  async getAll(type = "all"){
+    var list;
+    if (type === "all") 
+      list= await userModel.find({});
+    else if (type === "student")
+      list= await userModel.find({
+        role:"STUDENT"
+      });
+    else if (type === "lecturer")
+      list= await userModel.find({
+        role:"LECTURER"
+      });
     return list;
   },
   async delete(id) {

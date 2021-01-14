@@ -242,19 +242,16 @@ router.post("/reset-password", async (req, res) => {
 //Admin get User list with banned query
 router.get("/admin-manage/all", adminAuthentication, async function (req, res) {
   try {
-    if (req.query.type === null) {
-      const users = await userModel.getAll(
-        req.query.page,
-        req.query.pageCount
-      );
-      res.status(201).json(users);
+    if(req.query.page===undefined && req.query.pageCount===undefined){
+      const users = await userModel.getAll(req.query.type);
+      return res.status(201).json(users);
+    }
+    else if (req.query.type === null) {
+      const users = await userModel.getByPage(req.query.page,req.query.pageCount);
+      return res.status(201).json(users);
     } else {
-      const users = await userModel.getAll(
-        req.query.page,
-        req.query.pageCount,
-        req.query.type
-      );
-      res.status(201).json(users);
+      const users = await userModel.getByPage(req.query.page,req.query.pageCount, req.query.type);
+      return res.status(201).json(users);
     }
   } catch (error) {
     return res.status(400).send({

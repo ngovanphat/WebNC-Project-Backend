@@ -34,6 +34,18 @@ module.exports = {
       .sort({ last_updated: -1 }).limit(10).exec();
     return list;
   },
+  async getAll(page, count) {
+    var list;
+    if(page!==undefined && count!==undefined){
+      list = await courseModel.paginate(
+        {},
+        { offset: count * (page - 1), limit: count }
+      );
+    }else{
+      list = await courseModel.find({});
+    }
+    return list;
+  },
   async getCoursesPerPage(pageIndex, itemsPerPage) {
     const list = await courseModel.paginate({}, { lean: true, populate: 'leturer' }, { offset: itemsPerPage * (pageIndex - 1), limit: itemsPerPage });
     return list;

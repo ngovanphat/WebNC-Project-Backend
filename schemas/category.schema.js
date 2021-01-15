@@ -9,7 +9,10 @@ const categorySchema = new mongoose.Schema({
     type: Schema.Types.String,
   },
   courses_list: [{ type: Schema.Types.ObjectId, ref: 'courses' }],
-  count: Number
+  count: {
+    type:Number,
+    default: 0,
+  }
 });
 
 categorySchema.methods.toJSON = function () {

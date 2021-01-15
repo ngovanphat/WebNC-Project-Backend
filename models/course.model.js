@@ -97,7 +97,7 @@ module.exports = {
         description: course.description || oldCourse.description,
         shortDecription: course.shortDecription || oldCourse.shortDecription,
         numberOfStudent: course.numberOfStudent || oldCourse.numberOfStudent,
-        numberOfFeedback: (course.numberOfFeedback === null) ? oldCourse.numberOfFeedback : course.numberOfFeedback,
+        numberOfFeedback: (course.numberOfFeedback === undefined) ? oldCourse.numberOfFeedback : course.numberOfFeedback,
         isDone: course.isDone || oldCourse.isDone
       }, { new: true });
       return courseUpdated;
